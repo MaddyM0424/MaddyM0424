@@ -38,7 +38,7 @@
 
 <header>
   <h1>Lead Finder - No-Website Businesses</h1>
-  <p>Auto-scans 15 Bangalore areas — finds businesses with phone but no website</p>
+  <p>Auto-scans 15 Bangalore areas — up to 900 businesses — phone + no website only</p>
 </header>
 
 <div class="controls">
@@ -67,7 +67,7 @@
   </table>
 </div>
 
-<footer>Scans 15 Bangalore areas x 60 results = ~900 businesses · Shows only leads with phone & no website</footer>
+<footer>Scans 15 Bangalore areas x up to 60 results each · Shows only leads with phone & no website</footer>
 
 <script>
   const AREAS = [
@@ -76,7 +76,10 @@
     'Electronic City','Bannerghatta Road','BTM Layout','Malleshwaram','Sarjapur'
   ];
 
-  let service, map, allLeads = [], seenIds = new Set(), totalScanned = 0, areaIndex = 0, baseQuery = '';
+  let service, map;
+  let allLeads = [], seenIds = new Set(), totalScanned = 0;
+  let areaIndex = 0, currentPage = 0, currentArea = '';
+  let baseQuery = '';
 
   const WA_MESSAGE = (name) =>
     `Hi, I came across *${name}* on Google Maps and noticed you don't have a website yet.\n\nI help businesses in Bangalore get a professional website + Google ranking so clients can find them online.\n\nI'd love to show you a quick demo — would you be open to a 5-minute call?`;
@@ -94,6 +97,7 @@
     document.getElementById('empty').style.display = 'none';
     document.getElementById('searchBtn').disabled = true;
     document.getElementById('progressWrap').style.display = 'block';
+    updateStats();
     searchNextArea();
   }
 
@@ -105,32 +109,35 @@
       updateStats();
       return;
     }
-    const area = AREAS[areaIndex];
+    currentArea = AREAS[areaIndex];
+    currentPage = 1;
     const pct = Math.round((areaIndex / AREAS.length) * 100);
-    document.getElementById('progressLabel').textContent = `Searching area ${areaIndex + 1} of ${AREAS.length}: ${area} Bangalore (${pct}% complete)`;
+    document.getElementById('progressLabel').textContent =
+      `Searching area ${areaIndex + 1} of ${AREAS.length}: ${currentArea} Bangalore — page 1 of up to 3 (${pct}% done)`;
     document.getElementById('progressFill').style.width = pct + '%';
-    service.textSearch({ query: `${baseQuery} ${area} Bangalore` }, (results, status, pagination) => {
-      processPage(results, status, pagination, area, 1);
-    });
+    service.textSearch({ query: `${baseQuery} ${currentArea} Bangalore` }, onPageResults);
   }
 
-  function processPage(results, status, pagination, area, page) {
+  function onPageResults(results, status, pagination) {
     if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
-      areaIndex++; setTimeout(searchNextArea, 500); return;
+      areaIndex++;
+      setTimeout(searchNextArea, 500);
+      return;
     }
+
+    document.getElementById('progressLabel').textContent =
+      `Searching area ${areaIndex + 1} of ${AREAS.length}: ${currentArea} Bangalore — page ${currentPage} of up to 3`;
+
     const fresh = results.filter(r => !seenIds.has(r.place_id));
     fresh.forEach(r => seenIds.add(r.place_id));
-    fetchDetails(fresh, 0, area, () => {
-      if (pagination && pagination.hasNextPage && page < 3) {
-        setTimeout(() => {
-          pagination.nextPage();
-          // Capture next page via new textSearch (nextPage doesn't pass pagination to callback reliably)
-          service.textSearch({ query: `${baseQuery} ${area} Bangalore` }, (r2, s2, p2) => {
-            processPage(r2, s2, p2, area, page + 1);
-          });
-        }, 2000);
+
+    fetchDetails(fresh, 0, currentArea, () => {
+      if (pagination && pagination.hasNextPage && currentPage < 3) {
+        currentPage++;
+        setTimeout(() => pagination.nextPage(), 2000);
       } else {
-        areaIndex++; setTimeout(searchNextArea, 500);
+        areaIndex++;
+        setTimeout(searchNextArea, 500);
       }
     });
   }
