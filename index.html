@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lead Finder – Interior Designers Bangalore</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; color: #333; }
+    header { background: #1a73e8; color: white; padding: 20px 30px; }
+    header h1 { font-size: 1.5rem; }
+    header p { font-size: 0.9rem; opacity: 0.85; margin-top: 4px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; padding: 20px 30px; background: white; border-bottom: 1px solid #ddd; align-items: center; }
+    .controls select, .controls input { padding: 9px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; flex: 1; min-width: 180px; }
+    .controls button { padding: 10px 24px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; white-space: nowrap; }
+    .controls button:hover { background: #1558b0; }
+    .controls button:disabled { background: #aaa; cursor: not-allowed; }
+    .stats { padding: 12px 30px; font-size: 0.9rem; color: #555; background: #eef2fb; border-bottom: 1px solid #ddd; }
+    #map { display: none; }
+    .table-wrap { padding: 20px 30px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    thead { background: #1a73e8; color: white; }
+    th, td { padding: 12px 16px; text-align: left; font-size: 0.9rem; }
+    tbody tr:nth-child(even) { background: #f9fbff; }
+    tbody tr:hover { background: #eef2fb; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; }
+    .badge-no-site { background: #fdecea; color: #c62828; }
+    .badge-has-site { background: #e8f5e9; color: #2e7d32; }
+    .btn-wa { display: inline-block; padding: 7px 14px; background: #25D366; color: white; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 600; }
+    .btn-wa:hover { background: #1da851; }
+    .btn-wa.disabled { background: #ccc; cursor: not-allowed; pointer-events: none; }
+    .empty { text-align: center; padding: 60px 20px; color: #888; font-size: 1rem; }
+    .loader { text-align: center; padding: 40px; color: #1a73e8; font-size: 1rem; }
+    .more-btn-wrap { text-align: center; padding: 16px; }
+    .more-btn { padding: 10px 28px; background: white; border: 2px solid #1a73e8; color: #1a73e8; border-radius: 6px; cursor: pointer; font-size: 0.95rem; }
+    footer { text-align: center; padding: 16px; font-size: 0.8rem; color: #aaa; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Lead Finder - No-Website Businesses</h1>
+  <p>Find Interior Designers in Bangalore who don't have a website — your next clients!</p>
+</header>
+
+<div class="controls">
+  <input type="text" id="searchQuery" value="Interior Designers Bangalore" placeholder="Search query..." />
+  <select id="filterMode">
+    <option value="no_website">Only No Website (Leads)</option>
+    <option value="all">Show All</option>
+  </select>
+  <button id="searchBtn" onclick="startSearch()">Find Leads</button>
+  <button onclick="exportCSV()" style="background:#34a853;">Export CSV</button>
+</div>
+
+<div class="stats" id="stats">Enter a search query and click Find Leads.</div>
+<div id="map"></div>
+
+<div class="table-wrap">
+  <div id="loader" class="loader" style="display:none">Searching Google Maps...</div>
+  <div id="empty" class="empty" style="display:none">No leads found. Try a different search.</div>
+  <table id="resultsTable" style="display:none">
+    <thead>
+      <tr>
+        <th>#</th><th>Business Name</th><th>Address</th><th>Phone</th><th>Rating</th><th>Website</th><th>WhatsApp Pitch</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+  <div class="more-btn-wrap" id="moreWrap" style="display:none">
+    <button class="more-btn" onclick="loadMore()">Load More Results</button>
+  </div>
+</div>
+
+<footer>Built for your outreach workflow · Data from Google Maps Places API</footer>
+
+<script>
+  let service, map, allLeads = [], paginationRef = null, totalFound = 0, totalNoSite = 0;
+
+  const WA_MESSAGE = (name) =>
+    `Hi, I came across *${name}* on Google Maps and noticed you don't have a website yet.\n\nI help interior design businesses in Bangalore get a professional website + Google ranking so clients can find them online.\n\nI'd love to show you a quick demo — would you be open to a 5-minute call?`;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), { center: { lat: 12.9716, lng: 77.5946 }, zoom: 12 });
+    service = new google.maps.places.PlacesService(map);
+  }
+
+  function startSearch() {
+    allLeads = []; paginationRef = null; totalFound = 0; totalNoSite = 0;
+    document.getElementById('resultsBody').innerHTML = '';
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('empty').style.display = 'none';
+    document.getElementById('moreWrap').style.display = 'none';
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('searchBtn').disabled = true;
+    document.getElementById('stats').textContent = 'Searching...';
+    const query = document.getElementById('searchQuery').value.trim() || 'Interior Designers Bangalore';
+    service.textSearch({ query }, handleResults);
+  }
+
+  function handleResults(results, status, pagination) {
+    if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('empty').style.display = 'block';
+      document.getElementById('searchBtn').disabled = false;
+      return;
+    }
+    paginationRef = pagination;
+    fetchDetails(results, 0);
+  }
+
+  function fetchDetails(results, index) {
+    if (index >= results.length) {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('searchBtn').disabled = false;
+      if (allLeads.length === 0) document.getElementById('empty').style.display = 'block';
+      if (paginationRef && paginationRef.hasNextPage) document.getElementById('moreWrap').style.display = 'block';
+      updateStats();
+      return;
+    }
+    service.getDetails(
+      { placeId: results[index].place_id, fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating'] },
+      (detail, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
+          totalFound++;
+          const hasWebsite = !!detail.website;
+          if (!hasWebsite) totalNoSite++;
+          const filterMode = document.getElementById('filterMode').value;
+          if (filterMode === 'all' || !hasWebsite) { allLeads.push(detail); renderRow(detail, hasWebsite); document.getElementById('resultsTable').style.display = 'table'; }
+          updateStats();
+        }
+        setTimeout(() => fetchDetails(results, index + 1), 200);
+      }
+    );
+  }
+
+  function renderRow(detail, hasWebsite) {
+    const tbody = document.getElementById('resultsBody');
+    const phone = detail.formatted_phone_number || '';
+    const phoneClean = phone.replace(/\D/g, '');
+    const name = detail.name || '';
+    const waText = encodeURIComponent(WA_MESSAGE(name));
+    const waLink = phoneClean
+      ? `<a class="btn-wa" href="https://wa.me/91${phoneClean}?text=${waText}" target="_blank">WhatsApp</a>`
+      : `<span class="btn-wa disabled">No Phone</span>`;
+    const websiteBadge = hasWebsite
+      ? `<span class="badge badge-has-site">Has Website</span>`
+      : `<span class="badge badge-no-site">No Website</span>`;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${tbody.rows.length + 1}</td><td><strong>${name}</strong></td><td>${detail.formatted_address || ''}</td><td>${phone || '-'}</td><td>${detail.rating ? detail.rating : '-'}</td><td>${websiteBadge}</td><td>${waLink}</td>`;
+    tbody.appendChild(tr);
+  }
+
+  function loadMore() {
+    if (paginationRef && paginationRef.hasNextPage) {
+      document.getElementById('moreWrap').style.display = 'none';
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('searchBtn').disabled = true;
+      paginationRef.nextPage();
+    }
+  }
+
+  function updateStats() {
+    document.getElementById('stats').textContent =
+      `Found ${totalFound} businesses · ${totalNoSite} have NO website (potential leads) · ${totalFound - totalNoSite} already have a website`;
+  }
+
+  function exportCSV() {
+    if (allLeads.length === 0) { alert('No leads to export yet.'); return; }
+    const rows = [['Name', 'Address', 'Phone', 'Rating', 'Has Website', 'WhatsApp Link']];
+    allLeads.forEach(d => {
+      const phone = (d.formatted_phone_number || '').replace(/\D/g, '');
+      rows.push([d.name || '', d.formatted_address || '', d.formatted_phone_number || '', d.rating || '', d.website ? 'Yes' : 'No', phone ? `https://wa.me/91${phone}` : '']);
+    });
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'leads.csv'; a.click();
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDTDBK6wG6TWROAiyUtbwrsSNwSrjaQnQ&libraries=places&callback=initMap" async defer></script>
+
+</body>
+</html>
