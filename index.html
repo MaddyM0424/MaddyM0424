@@ -1,34 +1,52 @@
+$ cat /home/user/MaddyM0424/index.html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lead Finder – No-Website Businesses</title>
+  <title>Lead Finder – No-Website Businesses Bangalore</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; color: #333; }
     header { background: #1a73e8; color: white; padding: 20px 30px; }
     header h1 { font-size: 1.5rem; }
     header p { font-size: 0.9rem; opacity: 0.85; margin-top: 4px; }
-    .controls { display: flex; flex-wrap: wrap; gap: 12px; padding: 20px 30px; background: white; border-bottom: 1px solid #ddd; align-items: center; }
-    .controls input { padding: 9px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; flex: 2; min-width: 200px; }
+
+    .niche-section { background: white; border-bottom: 1px solid #ddd; padding: 16px 30px; }
+    .niche-section h3 { font-size: 0.95rem; margin-bottom: 10px; color: #444; }
+    .niche-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .niche-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border: 2px solid #ddd; border-radius: 20px; cursor: pointer; font-size: 0.85rem; background: #f9f9f9; transition: all 0.15s; user-select: none; }
+    .niche-chip:hover { border-color: #1a73e8; background: #eef2fb; }
+    .niche-chip.selected { border-color: #1a73e8; background: #1a73e8; color: white; }
+    .niche-chip input { display: none; }
+    .niche-actions { margin-top: 10px; display: flex; gap: 8px; }
+    .niche-actions button { font-size: 0.8rem; padding: 4px 12px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer; }
+    .niche-actions button:hover { background: #f0f0f0; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 30px; background: white; border-bottom: 1px solid #ddd; align-items: center; }
     .controls button { padding: 10px 24px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; white-space: nowrap; }
     .controls button:hover { background: #1558b0; }
     .controls button:disabled { background: #aaa; cursor: not-allowed; }
+
     .progress-wrap { padding: 10px 30px; background: #fff8e1; border-bottom: 1px solid #ffe082; display: none; }
-    .progress-label { font-size: 0.88rem; color: #555; margin-bottom: 6px; }
+    .progress-label { font-size: 0.85rem; color: #555; margin-bottom: 6px; }
     .progress-bar-bg { background: #e0e0e0; border-radius: 6px; height: 8px; }
-    .progress-bar-fill { background: #1a73e8; height: 8px; border-radius: 6px; transition: width 0.3s; }
+    .progress-bar-fill { background: #1a73e8; height: 8px; border-radius: 6px; transition: width 0.4s; }
+
     .stats { padding: 12px 30px; font-size: 0.9rem; color: #555; background: #eef2fb; border-bottom: 1px solid #ddd; }
     #map { display: none; }
+
     .table-wrap { padding: 20px 30px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
     thead { background: #1a73e8; color: white; }
-    th, td { padding: 12px 16px; text-align: left; font-size: 0.9rem; }
+    th, td { padding: 11px 14px; text-align: left; font-size: 0.88rem; }
     tbody tr:nth-child(even) { background: #f9fbff; }
     tbody tr:hover { background: #eef2fb; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; background: #e3f2fd; color: #1565c0; }
-    .btn-wa { display: inline-block; padding: 7px 14px; background: #25D366; color: white; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 600; }
+    .chip { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+    .chip-area { background: #e3f2fd; color: #1565c0; }
+    .chip-niche { background: #f3e5f5; color: #6a1b9a; }
+    .btn-wa { display: inline-block; padding: 6px 12px; background: #25D366; color: white; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
     .btn-wa:hover { background: #1da851; }
     .empty { text-align: center; padding: 60px 20px; color: #888; }
     footer { text-align: center; padding: 16px; font-size: 0.8rem; color: #aaa; }
@@ -37,13 +55,22 @@
 <body>
 
 <header>
-  <h1>Lead Finder - No-Website Businesses</h1>
-  <p>Auto-scans 15 Bangalore areas — up to 900 businesses — phone + no website only</p>
+  <h1>Lead Finder – No-Website Businesses Bangalore</h1>
+  <p>Select niches, scan 15 areas automatically, get WhatsApp-ready leads instantly</p>
 </header>
 
+<!-- Niche Selector -->
+<div class="niche-section">
+  <h3>Select Niches to Scan:</h3>
+  <div class="niche-grid" id="nicheGrid"></div>
+  <div class="niche-actions">
+    <button onclick="selectAll()">Select All</button>
+    <button onclick="clearAll()">Clear All</button>
+  </div>
+</div>
+
 <div class="controls">
-  <input type="text" id="baseQuery" value="Interior Designers" placeholder="Business type (e.g. Interior Designers)" />
-  <button id="searchBtn" onclick="startMultiSearch()">Find All Leads</button>
+  <button id="searchBtn" onclick="startSearch()">Find All Leads</button>
   <button onclick="exportCSV()" style="background:#34a853;">Export CSV</button>
 </div>
 
@@ -52,150 +79,251 @@
   <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
 </div>
 
-<div class="stats" id="stats">Enter a business type and click Find All Leads.</div>
+<div class="stats" id="stats">Select niches above and click Find All Leads.</div>
 <div id="map"></div>
 
 <div class="table-wrap">
-  <div id="empty" class="empty" style="display:none">No leads found. Try a different business type.</div>
+  <div id="empty" class="empty" style="display:none">No leads found. Try selecting more niches or areas.</div>
   <table id="resultsTable" style="display:none">
     <thead>
       <tr>
-        <th>#</th><th>Business Name</th><th>Area</th><th>Address</th><th>Phone</th><th>Rating</th><th>WhatsApp Pitch</th>
+        <th>#</th><th>Business Name</th><th>Niche</th><th>Area</th><th>Phone</th><th>Rating</th><th>WhatsApp Pitch</th>
       </tr>
     </thead>
     <tbody id="resultsBody"></tbody>
   </table>
 </div>
 
-<footer>Scans 15 Bangalore areas x up to 60 results each · Shows only leads with phone & no website</footer>
+<footer>Scans 15 Bangalore areas × selected niches × up to 60 results each · Phone + no website leads only</footer>
 
 <script>
-  const AREAS = [
-    'Whitefield','Koramangala','Indiranagar','HSR Layout','Jayanagar',
-    'Marathahalli','JP Nagar','Rajajinagar','Hebbal','Yelahanka',
-    'Electronic City','Bannerghatta Road','BTM Layout','Malleshwaram','Sarjapur'
-  ];
-
-  let service, map;
-  let allLeads = [], seenIds = new Set(), totalScanned = 0;
-  let areaIndex = 0, currentPage = 0, currentArea = '';
-  let baseQuery = '';
-
-  const WA_MESSAGE = (name) =>
-    `Hi, I came across *${name}* on Google Maps and noticed you don't have a website yet.\n\nI help businesses in Bangalore get a professional website + Google ranking so clients can find them online.\n\nI'd love to show you a quick demo — would you be open to a 5-minute call?`;
-
-  function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), { center: { lat: 12.9716, lng: 77.5946 }, zoom: 12 });
-    service = new google.maps.places.PlacesService(map);
+const NICHES = [
+  {
+    label: 'Interior Designers',
+    query: 'Interior Designers',
+    msg: (name) => `Hi! I found *${name}* on Google Maps — you have great reviews but no website.\n\n95% of clients Google a business before calling. Without a website, you're losing projects to competitors every day.\n\nI build websites for interior designers in Bangalore starting ₹7,999 — with SEO so clients find you on Google.\n\nCan I send you a free sample design? Takes 2 mins to look at. 🙏`
+  },
+  {
+    label: 'Architects',
+    query: 'Architects',
+    msg: (name) => `Hi! I came across *${name}* on Google Maps and noticed you don't have a website yet.\n\nMost clients searching for architects in Bangalore won't call if they can't find you online first.\n\nI create professional websites for architects with project portfolios + SEO — starting ₹8,999.\n\nInterested in seeing a free demo site? Would love to help you get more clients online. 🙏`
+  },
+  {
+    label: 'Photographers',
+    query: 'Photographers',
+    msg: (name) => `Hi! I saw *${name}* on Google Maps — your work deserves to be seen by more people!\n\nA portfolio website with SEO can bring you 10-20 new enquiries/month from Google — without spending on ads.\n\nI build photography websites in Bangalore starting ₹5,999.\n\nCan I show you a quick demo? 📸🙏`
+  },
+  {
+    label: 'Catering Services',
+    query: 'Catering Services',
+    msg: (name) => `Hi! I found *${name}* on Google Maps. You have great potential but no website — people searching "catering services Bangalore" can't find you!\n\nA simple website with your menu + photos + WhatsApp button can double your enquiries.\n\nI build catering websites starting ₹4,999 with Google ranking included.\n\nInterested? I can show you a free sample in 5 mins. 🍽️🙏`
+  },
+  {
+    label: 'Event Planners',
+    query: 'Event Planners',
+    msg: (name) => `Hi! I came across *${name}* on Google Maps — no website yet!\n\nEvent planning is a trust business. Clients want to see your past work before they call. A website with a portfolio + testimonials = more bookings.\n\nI build event planner websites in Bangalore starting ₹5,999 with SEO.\n\nCan I share a free demo? Would love to help you get more events! 🎉🙏`
+  },
+  {
+    label: 'Driving Schools',
+    query: 'Driving Schools',
+    msg: (name) => `Hi! I noticed *${name}* on Google Maps — no website yet!\n\nPeople search "driving school near me" hundreds of times a day in Bangalore. Without a website you're invisible to them.\n\nI build simple websites for driving schools starting ₹3,999 — with your fees, timings, and a WhatsApp enquiry button.\n\nInterested? I can show you a sample in 5 mins. 🚗🙏`
+  },
+  {
+    label: 'Yoga Studios',
+    query: 'Yoga Studios',
+    msg: (name) => `Hi! I found *${name}* on Google Maps — love what you're doing! But you don't have a website yet.\n\nPeople searching for yoga classes in Bangalore online won't find you. A website with your schedule, fees & Google ranking can fill your batches.\n\nI build yoga studio websites starting ₹4,999.\n\nCan I show you a free sample? 🧘🙏`
+  },
+  {
+    label: 'Coaching Classes',
+    query: 'Coaching Classes Tutor',
+    msg: (name) => `Hi! I came across *${name}* on Google Maps — no website yet!\n\nParents search online before choosing coaching classes for their kids. Without a website, you're losing students to competitors.\n\nI build coaching class websites starting ₹3,999 — with subjects, fees, results & enquiry form.\n\nInterested in a free demo? 📚🙏`
+  },
+  {
+    label: 'Beauty Salons',
+    query: 'Beauty Parlour Salon',
+    msg: (name) => `Hi! I saw *${name}* on Google Maps — great ratings! But no website yet.\n\nA website with your services, prices & photos helps you show up when people search "salon near me" in Bangalore.\n\nI build salon websites starting ₹3,999 with Google Maps SEO included.\n\nCan I show you a free demo? 💇🙏`
+  },
+  {
+    label: 'Pest Control',
+    query: 'Pest Control Services',
+    msg: (name) => `Hi! I found *${name}* on Google Maps — no website yet!\n\nPest control is a search-first business. When someone has a problem, they Google it immediately. Without a website, they'll call your competitor.\n\nI build pest control websites starting ₹3,499 with SEO so you appear on top.\n\nInterested? Quick 5-min call? 🐛🙏`
+  },
+  {
+    label: 'Packers & Movers',
+    query: 'Packers and Movers',
+    msg: (name) => `Hi! I came across *${name}* on Google Maps — no website yet!\n\nPeople moving homes always search Google first. A website with your services, service areas & customer reviews = more bookings.\n\nI build mover websites starting ₹3,999 with trust badges & SEO.\n\nCan I show you a sample? 🚚🙏`
+  },
+  {
+    label: 'AC Repair',
+    query: 'AC Repair Service',
+    msg: (name) => `Hi! I noticed *${name}* on Google Maps — no website yet!\n\n"AC repair near me" is searched thousands of times in Bangalore every summer. Without a website you're missing all those customers.\n\nI build service websites starting ₹2,999 with your services, areas covered & WhatsApp button.\n\nInterested? 🥵🙏`
+  },
+  {
+    label: 'Dental Clinics',
+    query: 'Dental Clinic',
+    msg: (name) => `Hi! I found *${name}* on Google Maps — no website yet!\n\nPatients search for dentists online before booking. A website with your services, doctor profile & appointment button builds trust instantly.\n\nI build dental clinic websites starting ₹5,999 with Google ranking.\n\nCan I show you a free demo? 🦷🙏`
+  },
+  {
+    label: 'Physiotherapy',
+    query: 'Physiotherapy Clinic',
+    msg: (name) => `Hi! I came across *${name}* on Google Maps — no website yet!\n\nPeople searching for physiotherapy in Bangalore want to see your qualifications and specializations before booking. A website builds that trust.\n\nI build clinic websites starting ₹4,999 with doctor profiles, services & SEO.\n\nInterested in a free demo? 🏥🙏`
+  },
+  {
+    label: 'Modular Kitchens',
+    query: 'Modular Kitchen',
+    msg: (name) => `Hi! I saw *${name}* on Google Maps — no website yet!\n\nModular kitchen is a high-value purchase — customers research extensively online before visiting a showroom. Without a website, you're losing lakhs in business.\n\nI build modular kitchen websites with photo galleries + SEO starting ₹6,999.\n\nCan I show you a free sample? 🍳🙏`
   }
+];
 
-  function startMultiSearch() {
-    allLeads = []; seenIds = new Set(); totalScanned = 0; areaIndex = 0;
-    baseQuery = document.getElementById('baseQuery').value.trim() || 'Interior Designers';
-    document.getElementById('resultsBody').innerHTML = '';
-    document.getElementById('resultsTable').style.display = 'none';
-    document.getElementById('empty').style.display = 'none';
-    document.getElementById('searchBtn').disabled = true;
-    document.getElementById('progressWrap').style.display = 'block';
+const AREAS = [
+  'Whitefield','Koramangala','Indiranagar','HSR Layout','Jayanagar',
+  'Marathahalli','JP Nagar','Rajajinagar','Hebbal','Yelahanka',
+  'Electronic City','Bannerghatta Road','BTM Layout','Malleshwaram','Sarjapur'
+];
+
+let service, map;
+let allLeads = [], seenIds = new Set(), totalScanned = 0;
+let queue = [], queueIndex = 0, currentPage = 0, currentItem = null;
+
+// Build niche chips
+const grid = document.getElementById('nicheGrid');
+NICHES.forEach((n, i) => {
+  const chip = document.createElement('div');
+  chip.className = 'niche-chip selected';
+  chip.dataset.index = i;
+  chip.textContent = n.label;
+  chip.onclick = () => chip.classList.toggle('selected');
+  grid.appendChild(chip);
+});
+
+function selectAll() { document.querySelectorAll('.niche-chip').forEach(c => c.classList.add('selected')); }
+function clearAll() { document.querySelectorAll('.niche-chip').forEach(c => c.classList.remove('selected')); }
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), { center: { lat: 12.9716, lng: 77.5946 }, zoom: 12 });
+  service = new google.maps.places.PlacesService(map);
+}
+
+function startSearch() {
+  const selectedNiches = [...document.querySelectorAll('.niche-chip.selected')].map(c => NICHES[c.dataset.index]);
+  if (selectedNiches.length === 0) { alert('Please select at least one niche.'); return; }
+
+  // Build queue: every niche × every area
+  queue = [];
+  selectedNiches.forEach(niche => {
+    AREAS.forEach(area => queue.push({ niche, area }));
+  });
+
+  allLeads = []; seenIds = new Set(); totalScanned = 0; queueIndex = 0;
+  document.getElementById('resultsBody').innerHTML = '';
+  document.getElementById('resultsTable').style.display = 'none';
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('searchBtn').disabled = true;
+  document.getElementById('progressWrap').style.display = 'block';
+  updateStats();
+  processNext();
+}
+
+function processNext() {
+  if (queueIndex >= queue.length) {
+    document.getElementById('searchBtn').disabled = false;
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('progressFill').style.width = '100%';
+    if (allLeads.length === 0) document.getElementById('empty').style.display = 'block';
     updateStats();
-    searchNextArea();
+    return;
   }
+  currentItem = queue[queueIndex];
+  currentPage = 1;
+  const pct = Math.round((queueIndex / queue.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    `[${queueIndex + 1}/${queue.length}] ${currentItem.niche.label} in ${currentItem.area} — page ${currentPage}/3 (${pct}% done)`;
+  service.textSearch(
+    { query: `${currentItem.niche.query} ${currentItem.area} Bangalore` },
+    onPageResults
+  );
+}
 
-  function searchNextArea() {
-    if (areaIndex >= AREAS.length) {
-      document.getElementById('searchBtn').disabled = false;
-      document.getElementById('progressWrap').style.display = 'none';
-      if (allLeads.length === 0) document.getElementById('empty').style.display = 'block';
-      updateStats();
-      return;
+function onPageResults(results, status, pagination) {
+  if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+    queueIndex++;
+    setTimeout(processNext, 500);
+    return;
+  }
+  document.getElementById('progressLabel').textContent =
+    `[${queueIndex + 1}/${queue.length}] ${currentItem.niche.label} in ${currentItem.area} — page ${currentPage}/3`;
+
+  const fresh = results.filter(r => !seenIds.has(r.place_id));
+  fresh.forEach(r => seenIds.add(r.place_id));
+
+  fetchDetails(fresh, 0, currentItem, () => {
+    if (pagination && pagination.hasNextPage && currentPage < 3) {
+      currentPage++;
+      setTimeout(() => pagination.nextPage(), 2000);
+    } else {
+      queueIndex++;
+      setTimeout(processNext, 500);
     }
-    currentArea = AREAS[areaIndex];
-    currentPage = 1;
-    const pct = Math.round((areaIndex / AREAS.length) * 100);
-    document.getElementById('progressLabel').textContent =
-      `Searching area ${areaIndex + 1} of ${AREAS.length}: ${currentArea} Bangalore — page 1 of up to 3 (${pct}% done)`;
-    document.getElementById('progressFill').style.width = pct + '%';
-    service.textSearch({ query: `${baseQuery} ${currentArea} Bangalore` }, onPageResults);
-  }
+  });
+}
 
-  function onPageResults(results, status, pagination) {
-    if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
-      areaIndex++;
-      setTimeout(searchNextArea, 500);
-      return;
-    }
-
-    document.getElementById('progressLabel').textContent =
-      `Searching area ${areaIndex + 1} of ${AREAS.length}: ${currentArea} Bangalore — page ${currentPage} of up to 3`;
-
-    const fresh = results.filter(r => !seenIds.has(r.place_id));
-    fresh.forEach(r => seenIds.add(r.place_id));
-
-    fetchDetails(fresh, 0, currentArea, () => {
-      if (pagination && pagination.hasNextPage && currentPage < 3) {
-        currentPage++;
-        setTimeout(() => pagination.nextPage(), 2000);
-      } else {
-        areaIndex++;
-        setTimeout(searchNextArea, 500);
-      }
-    });
-  }
-
-  function fetchDetails(results, index, area, onDone) {
-    if (index >= results.length) { onDone(); return; }
-    service.getDetails(
-      { placeId: results[index].place_id, fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating'] },
-      (detail, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
-          totalScanned++;
-          if (detail.formatted_phone_number && !detail.website) {
-            allLeads.push({ ...detail, area });
-            renderRow(detail, area);
-            document.getElementById('resultsTable').style.display = 'table';
-          }
-          updateStats();
+function fetchDetails(results, index, item, onDone) {
+  if (index >= results.length) { onDone(); return; }
+  service.getDetails(
+    { placeId: results[index].place_id, fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating'] },
+    (detail, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
+        totalScanned++;
+        if (detail.formatted_phone_number && !detail.website) {
+          const lead = { ...detail, area: item.area, niche: item.niche };
+          allLeads.push(lead);
+          renderRow(lead);
+          document.getElementById('resultsTable').style.display = 'table';
         }
-        setTimeout(() => fetchDetails(results, index + 1, area, onDone), 250);
+        updateStats();
       }
-    );
-  }
+      setTimeout(() => fetchDetails(results, index + 1, item, onDone), 250);
+    }
+  );
+}
 
-  function renderRow(detail, area) {
-    const tbody = document.getElementById('resultsBody');
-    const phone = detail.formatted_phone_number;
-    const phoneClean = phone.replace(/\D/g, '');
-    const name = detail.name || '';
-    const waText = encodeURIComponent(WA_MESSAGE(name));
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${tbody.rows.length + 1}</td>
-      <td><strong>${name}</strong></td>
-      <td><span class="badge">${area}</span></td>
-      <td>${detail.formatted_address || ''}</td>
-      <td>${phone}</td>
-      <td>${detail.rating || '-'}</td>
-      <td><a class="btn-wa" href="https://wa.me/91${phoneClean}?text=${waText}" target="_blank">WhatsApp</a></td>`;
-    tbody.appendChild(tr);
-  }
+function renderRow(lead) {
+  const tbody = document.getElementById('resultsBody');
+  const phone = lead.formatted_phone_number;
+  const phoneClean = phone.replace(/\D/g, '');
+  const name = lead.name || '';
+  const msg = lead.niche.msg(name);
+  const waText = encodeURIComponent(msg);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${tbody.rows.length + 1}</td>
+    <td><strong>${name}</strong><br><small style="color:#888">${lead.formatted_address || ''}</small></td>
+    <td><span class="chip chip-niche">${lead.niche.label}</span></td>
+    <td><span class="chip chip-area">${lead.area}</span></td>
+    <td>${phone}</td>
+    <td>${lead.rating || '-'}</td>
+    <td><a class="btn-wa" href="https://wa.me/91${phoneClean}?text=${waText}" target="_blank">WhatsApp</a></td>`;
+  tbody.appendChild(tr);
+}
 
-  function updateStats() {
-    document.getElementById('stats').textContent =
-      `Scanned ${totalScanned} businesses across ${Math.min(areaIndex, AREAS.length)} of ${AREAS.length} areas · ${allLeads.length} leads found (phone + no website)`;
-  }
+function updateStats() {
+  document.getElementById('stats').textContent =
+    `Scanned ${totalScanned} businesses · ${allLeads.length} leads found (phone + no website) · ${queue.length - queueIndex} searches remaining`;
+}
 
-  function exportCSV() {
-    if (allLeads.length === 0) { alert('No leads to export yet.'); return; }
-    const rows = [['Name','Area','Address','Phone','Rating','WhatsApp Link']];
-    allLeads.forEach(d => {
-      const phone = (d.formatted_phone_number || '').replace(/\D/g, '');
-      rows.push([d.name||'', d.area||'', d.formatted_address||'', d.formatted_phone_number||'', d.rating||'', phone ? `https://wa.me/91${phone}` : '']);
-    });
-    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-    a.download = 'leads.csv'; a.click();
-  }
+function exportCSV() {
+  if (allLeads.length === 0) { alert('No leads to export yet.'); return; }
+  const rows = [['Name','Niche','Area','Address','Phone','Rating','WhatsApp Link']];
+  allLeads.forEach(d => {
+    const phone = (d.formatted_phone_number || '').replace(/\D/g, '');
+    rows.push([d.name||'', d.niche.label||'', d.area||'', d.formatted_address||'', d.formatted_phone_number||'', d.rating||'', phone ? `https://wa.me/91${phone}` : '']);
+  });
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'leads.csv'; a.click();
+}
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDTDBK6wG6TWROAiyUtbwrsSNwSrjaQnQ&libraries=places&callback=initMap" async defer></script>
