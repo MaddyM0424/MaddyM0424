@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Studio Eshanya – Luxury Interior Design | Bangalore</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+    :root {
+      --gold: #c9a96e;
+      --gold2: #e8d5b0;
+      --dark: #0d0d0d;
+      --dark2: #141414;
+      --dark3: #1c1c1c;
+      --light: #f5f0e8;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS BACKGROUND ── */
+    #bg-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 60px;
+      background: rgba(13,13,13,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+      transition: padding 0.3s;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; letter-spacing: 3px;
+      color: var(--white); text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    nav ul { list-style: none; display: flex; gap: 36px; align-items: center; }
+    nav ul a { text-decoration: none; color: rgba(255,255,255,0.65); font-size: 0.82rem; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s; }
+    nav ul a:hover { color: var(--gold); }
+    .nav-btn {
+      border: 1px solid var(--gold); color: var(--gold) !important;
+      padding: 10px 24px; border-radius: 2px; letter-spacing: 1.5px;
+      transition: all 0.3s !important;
+    }
+    .nav-btn:hover { background: var(--gold); color: var(--dark) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 100vh; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=90') center/cover no-repeat;
+      transform: scale(1.1);
+      transition: transform 8s ease;
+    }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(13,13,13,0.85) 0%, rgba(13,13,13,0.5) 50%, rgba(13,13,13,0.8) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; max-width: 900px; padding: 0 30px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px; opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 40px; height: 1px; background: var(--gold);
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 6rem; font-weight: 300; line-height: 1.05;
+      letter-spacing: -1px; margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero p {
+      font-size: 1rem; color: rgba(255,255,255,0.65); line-height: 1.8;
+      max-width: 520px; margin: 0 auto 44px;
+      opacity: 0; animation: fadeUp 1s 0.7s forwards;
+    }
+    .hero-btns {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 1s 0.9s forwards;
+    }
+    .btn-gold {
+      background: var(--gold); color: var(--dark);
+      padding: 16px 40px; text-decoration: none;
+      font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 500; border-radius: 2px; transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .btn-gold::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,0.2); transform: translateX(-100%);
+      transition: transform 0.4s;
+    }
+    .btn-gold:hover::before { transform: translateX(0); }
+    .btn-ghost {
+      border: 1px solid rgba(255,255,255,0.3); color: var(--white);
+      padding: 16px 40px; text-decoration: none;
+      font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 500; border-radius: 2px; transition: all 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.4);
+      opacity: 0; animation: fadeUp 1s 1.2s forwards; z-index: 2;
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollLine 1.8s ease-in-out infinite;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      border-top: 1px solid rgba(201,169,110,0.15);
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+    }
+    .stat-item {
+      padding: 48px 40px; text-align: center;
+      border-right: 1px solid rgba(201,169,110,0.15);
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(10px);
+      transition: background 0.3s;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item:hover { background: rgba(201,169,110,0.05); }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem; font-weight: 300; color: var(--gold);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .stat-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+    /* ── SECTIONS ── */
+    .section { position: relative; z-index: 1; padding: 120px 60px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .section-label::before { content:''; width: 30px; height: 1px; background: var(--gold); }
+    h2.section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.6rem; font-weight: 300; line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    h2.section-title em { font-style: italic; color: var(--gold); }
+    .section-desc { color: rgba(255,255,255,0.55); line-height: 1.85; font-size: 0.95rem; max-width: 480px; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .about-img-wrap {
+      position: relative; perspective: 1000px;
+    }
+    .about-img-3d {
+      width: 100%; border-radius: 4px; overflow: hidden;
+      transform: rotateY(-8deg) rotateX(3deg);
+      box-shadow: 40px 40px 80px rgba(0,0,0,0.6), -5px -5px 20px rgba(201,169,110,0.1);
+      transition: transform 0.6s ease;
+    }
+    .about-img-3d:hover { transform: rotateY(0deg) rotateX(0deg); }
+    .about-img-3d img { width: 100%; height: 500px; object-fit: cover; display: block; }
+    .about-badge {
+      position: absolute; bottom: -24px; right: -24px;
+      background: var(--gold); color: var(--dark);
+      padding: 24px 28px; border-radius: 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600; text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .about-badge small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-weight: 400; }
+    .about-features { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; }
+    .feature-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px; border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 4px; background: rgba(255,255,255,0.02);
+      transition: all 0.3s;
+    }
+    .feature-row:hover { border-color: var(--gold); background: rgba(201,169,110,0.05); }
+    .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .feature-row span { font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+
+    /* ── SERVICES 3D CARDS ── */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 64px;
+    }
+    .service-3d {
+      perspective: 1000px; cursor: pointer;
+    }
+    .service-inner {
+      position: relative; height: 380px;
+      transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0.2,0.2,1);
+      border-radius: 4px;
+    }
+    .service-3d:hover .service-inner { transform: rotateY(180deg); }
+    .service-front, .service-back {
+      position: absolute; inset: 0; backface-visibility: hidden;
+      border-radius: 4px; overflow: hidden;
+    }
+    .service-front {
+      background: var(--dark3);
+      border: 1px solid rgba(201,169,110,0.15);
+      display: flex; flex-direction: column;
+    }
+    .service-front img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .service-front-content { padding: 28px 24px; flex: 1; }
+    .service-num { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; }
+    .service-front h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 8px; }
+    .service-front p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+    .service-back {
+      background: linear-gradient(135deg, var(--gold) 0%, #a07840 100%);
+      transform: rotateY(180deg);
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; text-align: center; padding: 36px;
+    }
+    .service-back h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 16px; font-weight: 400; }
+    .service-back p { font-size: 0.88rem; color: rgba(13,13,13,0.75); line-height: 1.8; margin-bottom: 28px; }
+    .service-back a { background: var(--dark); color: var(--gold); padding: 12px 28px; text-decoration: none; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px; transition: all 0.3s; }
+    .service-back a:hover { background: rgba(13,13,13,0.8); }
+
+    /* ── PROJECTS MASONRY ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+      margin-top: 64px;
+    }
+    .proj { position: relative; overflow: hidden; border-radius: 4px; cursor: pointer; }
+    .proj:nth-child(1) { grid-column: 1/8; grid-row: 1/3; }
+    .proj:nth-child(2) { grid-column: 8/13; grid-row: 1/2; }
+    .proj:nth-child(3) { grid-column: 8/13; grid-row: 2/3; }
+    .proj:nth-child(4) { grid-column: 1/5; grid-row: 3/4; }
+    .proj:nth-child(5) { grid-column: 5/9; grid-row: 3/4; }
+    .proj:nth-child(6) { grid-column: 9/13; grid-row: 3/4; }
+    .proj img {
+      width: 100%; height: 100%; object-fit: cover;
+      min-height: 220px; display: block;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .proj:hover img { transform: scale(1.08); }
+    .proj-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 28px;
+    }
+    .proj:hover .proj-overlay { opacity: 1; }
+    .proj-cat { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .proj-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; }
+
+    /* ── PROCESS ── */
+    .process-section { background: rgba(20,20,20,0.5); }
+    .process-grid {
+      display: grid; grid-template-columns: repeat(5,1fr); gap: 0; margin-top: 64px;
+      border: 1px solid rgba(201,169,110,0.15); border-radius: 4px; overflow: hidden;
+    }
+    .process-item {
+      padding: 44px 32px;
+      border-right: 1px solid rgba(201,169,110,0.15);
+      position: relative; transition: background 0.3s;
+    }
+    .process-item:last-child { border-right: none; }
+    .process-item:hover { background: rgba(201,169,110,0.04); }
+    .process-item::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--gold); transform: scaleX(0);
+      transition: transform 0.4s; transform-origin: left;
+    }
+    .process-item:hover::before { transform: scaleX(1); }
+    .process-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: rgba(201,169,110,0.2); line-height: 1; margin-bottom: 20px; }
+    .process-item h4 { font-size: 0.88rem; letter-spacing: 1px; margin-bottom: 12px; font-weight: 500; }
+    .process-item p { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.75; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 64px; }
+    .testi-card {
+      background: rgba(28,28,28,0.8); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 4px; padding: 36px;
+      transition: all 0.4s; position: relative; overflow: hidden;
+    }
+    .testi-card::before {
+      content: '\201C';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem; color: rgba(201,169,110,0.08);
+      position: absolute; top: -10px; left: 16px; line-height: 1;
+    }
+    .testi-card:hover { border-color: rgba(201,169,110,0.4); transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+    .testi-stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 18px; }
+    .testi-text { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; line-height: 1.8; color: rgba(255,255,255,0.8); margin-bottom: 28px; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), #a07840); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--dark); font-weight: 600; }
+    .testi-info strong { display: block; font-size: 0.88rem; }
+    .testi-info span { font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+
+    /* ── CTA ── */
+    .cta-section {
+      position: relative; z-index: 1; text-align: center;
+      padding: 140px 60px; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1600&q=80') center/cover no-repeat;
+      opacity: 0.12;
+    }
+    .cta-section::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,169,110,0.08) 0%, transparent 70%);
+    }
+    .cta-inner { position: relative; z-index: 2; max-width: 680px; margin: 0 auto; }
+    .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; line-height: 1.15; margin-bottom: 20px; }
+    .cta-section h2 em { font-style: italic; color: var(--gold); }
+    .cta-section p { color: rgba(255,255,255,0.55); margin-bottom: 44px; line-height: 1.8; }
+    .wa-float {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #25D366; color: white; padding: 18px 44px;
+      border-radius: 2px; text-decoration: none;
+      font-size: 0.88rem; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 500; transition: all 0.3s;
+      box-shadow: 0 0 40px rgba(37,211,102,0.3);
+    }
+    .wa-float:hover { background: #1da851; box-shadow: 0 0 60px rgba(37,211,102,0.5); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      background: rgba(8,8,8,0.9); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(201,169,110,0.15);
+      padding: 48px 60px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 3px; font-weight: 300; }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.78rem; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+    .footer-contact { text-align: right; }
+    .footer-contact p { color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+
+    /* ── DEMO BADGE ── */
+    .demo-badge {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      background: rgba(13,13,13,0.9); color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 12px 20px; border-radius: 4px;
+      font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      nav ul { display: none; }
+      .hero h1 { font-size: 3.2rem; }
+      .section { padding: 70px 24px; }
+      .about-grid, .services-grid, .testimonials-wrap { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2,1fr); }
+      .process-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .proj { grid-column: auto !important; grid-row: auto !important; }
+      .proj img { min-height: 240px; }
+      .about-badge { right: 0; bottom: -16px; }
+      .cta-section { padding: 80px 24px; }
+      .cta-section h2 { font-size: 2.6rem; }
+      footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+      .footer-contact { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CANVAS PARTICLES -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- DEMO BADGE -->
+<div class="demo-badge">✦ Demo — Studio Eshanya</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">STUDIO <span>ESHANYA</span></a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact" class="nav-btn">Get Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Luxury Interior Design · Bangalore</div>
+    <h1>Crafting <em>Bespoke</em><br>Living Spaces</h1>
+    <p>We transform spaces into timeless experiences — where artistry meets architecture and every detail tells your story.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-gold">Explore Our Work</a>
+      <a href="#contact" class="btn-ghost">Book Consultation</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="200">0</div>
+    <div class="stat-label">Projects Completed</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-1">
+    <div class="stat-num" data-count="15">0</div>
+    <div class="stat-label">Years of Excellence</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-2">
+    <div class="stat-num" data-count="12">0</div>
+    <div class="stat-label">Design Awards</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-3">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Client Satisfaction</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-img-3d" id="img3d">
+        <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=85" alt="Studio Eshanya Interior" />
+      </div>
+      <div class="about-badge">15+ <small>Years of Craft</small></div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="section-label">Our Story</div>
+      <h2 class="section-title">Where Vision<br>Meets <em>Craft</em></h2>
+      <p class="section-desc" style="margin-bottom:28px">Studio Eshanya is Bangalore's premier luxury interior design studio — known for creating spaces that are not just beautiful, but deeply personal. Every project is a collaboration between our designers and your vision.</p>
+      <p class="section-desc">From elegant residences in Whitefield to bespoke commercial spaces in Koramangala, we bring a philosophy of refined minimalism and layered luxury to every project we touch.</p>
+      <div class="about-features">
+        <div class="feature-row"><div class="feature-dot"></div><span>Bespoke residential & commercial interiors</span></div>
+        <div class="feature-row"><div class="feature-dot"></div><span>3D visualization before execution begins</span></div>
+        <div class="feature-row"><div class="feature-dot"></div><span>End-to-end project management</span></div>
+        <div class="feature-row"><div class="feature-dot"></div><span>On-time delivery, always within budget</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section process-section" id="services">
+  <div class="reveal">
+    <div class="section-label">What We Offer</div>
+    <h2 class="section-title">Our <em>Services</em></h2>
+    <p class="section-desc">Hover over each card to discover what we bring to your space.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-3d reveal reveal-delay-1">
+      <div class="service-inner">
+        <div class="service-front">
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=80" alt="Residential" />
+          <div class="service-front-content">
+            <div class="service-num">01</div>
+            <h3>Residential Interiors</h3>
+            <p>Luxury homes that reflect your personality and lifestyle — down to the last detail.</p>
+          </div>
+        </div>
+        <div class="service-back">
+          <h3>Residential Interiors</h3>
+          <p>Villas, apartments, and independent homes — we craft living spaces that feel both grand and deeply personal.</p>
+          <a href="#contact">Start Your Project</a>
+        </div>
+      </div>
+    </div>
+    <div class="service-3d reveal reveal-delay-2">
+      <div class="service-inner">
+        <div class="service-front">
+          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&q=80" alt="Commercial" />
+          <div class="service-front-content">
+            <div class="service-num">02</div>
+            <h3>Commercial Spaces</h3>
+            <p>Offices, retail stores, and hospitality spaces designed for impact and function.</p>
+          </div>
+        </div>
+        <div class="service-back">
+          <h3>Commercial Spaces</h3>
+          <p>We design workplaces and retail environments that inspire productivity and leave lasting impressions on every visitor.</p>
+          <a href="#contact">Start Your Project</a>
+        </div>
+      </div>
+    </div>
+    <div class="service-3d reveal reveal-delay-3">
+      <div class="service-inner">
+        <div class="service-front">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Modular" />
+          <div class="service-front-content">
+            <div class="service-num">03</div>
+            <h3>Modular & FF&E</h3>
+            <p>Custom modular kitchens, wardrobes, and furniture selection for complete interiors.</p>
+          </div>
+        </div>
+        <div class="service-back">
+          <h3>Modular & FF&E</h3>
+          <p>From custom cabinetry to curated furniture and fixture procurement — we handle every element of your interior fit-out.</p>
+          <a href="#contact">Start Your Project</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="reveal">
+    <div class="section-label">Our Portfolio</div>
+    <h2 class="section-title">Featured <em>Projects</em></h2>
+    <p class="section-desc">A curated selection of spaces we have brought to life across Bangalore.</p>
+  </div>
+  <div class="projects-grid reveal">
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=85" alt="Living Room" />
+      <div class="proj-overlay"><div class="proj-cat">Residential · Whitefield</div><div class="proj-title">The Arora Residence — 5200 sq.ft</div></div>
+    </div>
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80" alt="Bedroom" />
+      <div class="proj-overlay"><div class="proj-cat">Residential · Indiranagar</div><div class="proj-title">The Mehta Suite</div></div>
+    </div>
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Office" />
+      <div class="proj-overlay"><div class="proj-cat">Commercial · Koramangala</div><div class="proj-title">Nexus Tech HQ</div></div>
+    </div>
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=500&q=80" alt="Living" />
+      <div class="proj-overlay"><div class="proj-cat">Residential · HSR Layout</div><div class="proj-title">Modern Minimalist Villa</div></div>
+    </div>
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80" alt="Kitchen" />
+      <div class="proj-overlay"><div class="proj-cat">Interior · JP Nagar</div><div class="proj-title">The Bespoke Kitchen</div></div>
+    </div>
+    <div class="proj">
+      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&q=80" alt="Hotel" />
+      <div class="proj-overlay"><div class="proj-cat">Hospitality · MG Road</div><div class="proj-title">Boutique Hotel Lobby</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section process-section" id="process">
+  <div class="reveal">
+    <div class="section-label">How We Work</div>
+    <h2 class="section-title">The <em>Process</em></h2>
+    <p class="section-desc">A transparent, collaborative journey from first conversation to final reveal.</p>
+  </div>
+  <div class="process-grid reveal">
+    <div class="process-item">
+      <div class="process-num">01</div>
+      <h4>Discovery Call</h4>
+      <p>We understand your vision, lifestyle, and budget in a relaxed no-obligation conversation.</p>
+    </div>
+    <div class="process-item">
+      <div class="process-num">02</div>
+      <h4>Concept & Mood</h4>
+      <p>Our designers present concept boards, material palettes, and spatial layouts for your approval.</p>
+    </div>
+    <div class="process-item">
+      <div class="process-num">03</div>
+      <h4>3D Walkthrough</h4>
+      <p>Experience your future space in photorealistic 3D before a single wall is touched.</p>
+    </div>
+    <div class="process-item">
+      <div class="process-num">04</div>
+      <h4>Execution</h4>
+      <p>Our project managers supervise every detail — materials, contractors, timelines, quality.</p>
+    </div>
+    <div class="process-item">
+      <div class="process-num">05</div>
+      <h4>The Reveal</h4>
+      <p>We hand over your completed space — exactly as envisioned, on time, on budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="testimonials">
+  <div class="reveal">
+    <div class="section-label">Client Stories</div>
+    <h2 class="section-title">What They <em>Say</em></h2>
+  </div>
+  <div class="testimonials-wrap">
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Studio Eshanya turned our raw apartment into a magazine-worthy home. Their sense of proportion, light, and material is extraordinary. Best investment we ever made."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div class="testi-info"><strong>Rohit & Sneha Kapoor</strong><span>Homeowners · Whitefield</span></div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Our office now inspires every person who walks through the door. The team was meticulous, professional, and delivered 3 weeks ahead of schedule. Incredible work."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div class="testi-info"><strong>Arjun Menon</strong><span>Founder, Nexus Tech · Koramangala</span></div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-3">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The 3D walkthrough was a revelation — I could see my home before it existed. What they delivered was even better than the render. Truly world-class talent in Bangalore."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div class="testi-info"><strong>Priya Nambiar</strong><span>Villa Owner · Sarjapur</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner reveal">
+    <div class="section-label" style="justify-content:center">Begin Your Journey</div>
+    <h2>Let's Create Something <em>Extraordinary</em></h2>
+    <p>Book a free 30-minute consultation with our lead designer. No commitment, just a conversation about your dream space.</p>
+    <a class="wa-float" href="https://wa.me/919876543210?text=Hi%20Studio%20Eshanya!%20I%20saw%20your%20portfolio%20and%20would%20love%20to%20discuss%20my%20interior%20project.%20Can%20we%20schedule%20a%20free%20consultation%3F" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp Us Now
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">STUDIO <span>ESHANYA</span></div>
+    <p style="margin-top:8px">Luxury Interior Design · Bangalore</p>
+  </div>
+  <p>© 2025 Studio Eshanya. All Rights Reserved.</p>
+  <div class="footer-contact">
+    <p>📞 +91 98765 43210</p>
+    <p>📧 hello@studioeshanya.in</p>
+  </div>
+</footer>
+
+<script>
+  // ── PARTICLE CANVAS ──
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  const particles = Array.from({length: 60}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.3,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    o: Math.random() * 0.5 + 0.1
+  }));
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,169,110,${p.o})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    // draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i+1; j < particles.length; j++) {
+        const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(201,169,110,${0.06 * (1 - dist/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  // ── PARALLAX HERO ──
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    document.getElementById('heroBg').style.transform = `scale(1.1) translateY(${y * 0.3}px)`;
+  });
+
+  // ── 3D TILT ON ABOUT IMAGE ──
+  const img3d = document.getElementById('img3d');
+  img3d.parentElement.addEventListener('mousemove', (e) => {
+    const rect = img3d.parentElement.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    img3d.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 10}deg)`;
+  });
+  img3d.parentElement.addEventListener('mouseleave', () => {
+    img3d.style.transform = 'rotateY(-8deg) rotateX(3deg)';
+  });
+
+  // ── SCROLL REVEAL ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── COUNT UP STATS ──
+  const counters = document.querySelectorAll('.stat-num[data-count]');
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.count);
+        let current = 0;
+        const step = Math.ceil(target / 60);
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = current + '+';
+          if (current >= target) clearInterval(timer);
+        }, 25);
+        countObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => countObserver.observe(c));
+</script>
+
+</body>
+</html>
