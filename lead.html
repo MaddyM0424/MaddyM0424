@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lead Dashboard v2 — Rating-Targeted Outreach</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #0d5a54;
+      --accent: #f59e0b;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, #0f766e 0%, #0d5a54 100%);
+      color: white; padding: 20px 30px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 700; }
+    header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+    .status-badge {
+      background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 100px;
+      font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 50% { opacity: 0.5; } }
+
+    .daily-limit-card {
+      background: white; padding: 16px 30px; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .limit-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--gray-100); padding: 8px 16px; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 600;
+    }
+    .limit-progress { flex: 1; min-width: 200px; background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden; }
+    .limit-progress-bar { height: 100%; background: var(--success); transition: all 0.3s; }
+    .limit-progress-bar.warn { background: var(--accent); }
+    .limit-progress-bar.stop { background: var(--danger); }
+    .week-selector { display: flex; gap: 6px; }
+    .week-btn { padding: 6px 14px; font-size: 0.8rem; border: 1px solid var(--gray-200); background: white; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .week-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .config-section { background: white; padding: 20px 30px; border-bottom: 1px solid var(--gray-200); }
+    .section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); margin-bottom: 12px; }
+
+    .rating-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .rating-card { border: 2px solid var(--gray-200); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; background: white; }
+    .rating-card:hover { border-color: var(--primary); }
+    .rating-card.active { border-color: var(--primary); background: #f0fdfa; }
+    .rating-card .r-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .rating-card .r-desc { font-size: 0.78rem; color: var(--gray-500); line-height: 1.5; }
+    .rating-card .r-range { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .r-range.low { background: #fee2e2; color: #991b1b; }
+    .r-range.high { background: #dcfce7; color: #166534; }
+    .r-range.both { background: #dbeafe; color: #1e40af; }
+
+    .niche-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    .niche-chip { padding: 6px 14px; border: 2px solid var(--gray-200); border-radius: 20px; font-size: 0.82rem; cursor: pointer; background: white; transition: all 0.15s; user-select: none; }
+    .niche-chip:hover { border-color: var(--primary); }
+    .niche-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
+    .niche-actions { margin-top: 10px; display: flex; gap: 8px; }
+    .niche-actions button { font-size: 0.75rem; padding: 4px 12px; border: 1px solid var(--gray-200); background: white; border-radius: 4px; cursor: pointer; }
+
+    .controls { padding: 16px 30px; background: white; border-bottom: 1px solid var(--gray-200); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+    .btn-outline { background: white; color: var(--gray-700); border: 1px solid var(--gray-200); }
+    .btn-outline:hover { background: var(--gray-100); }
+
+    .progress-wrap { display: none; padding: 12px 30px; background: #fffbeb; border-bottom: 1px solid #fde68a; }
+    .progress-label { font-size: 0.82rem; color: var(--gray-700); margin-bottom: 6px; }
+    .progress-bar-bg { background: var(--gray-200); border-radius: 6px; height: 8px; overflow: hidden; }
+    .progress-bar-fill { background: var(--accent); height: 100%; transition: width 0.4s; }
+
+    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; padding: 16px 30px; background: #f0fdfa; border-bottom: 1px solid var(--gray-200); }
+    .stat-card { background: white; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gray-200); }
+    .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.72rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    .filters-bar { padding: 12px 30px; background: white; border-bottom: 1px solid var(--gray-200); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filters-bar label { font-size: 0.78rem; color: var(--gray-500); font-weight: 600; margin-right: 4px; }
+    .filter-chip { padding: 5px 12px; font-size: 0.78rem; border: 1px solid var(--gray-200); background: white; border-radius: 100px; cursor: pointer; transition: all 0.15s; }
+    .filter-chip.active { background: var(--gray-900); color: white; border-color: var(--gray-900); }
+
+    .table-wrap { padding: 20px 30px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    thead { background: var(--gray-900); color: white; }
+    th, td { padding: 12px 14px; text-align: left; font-size: 0.85rem; vertical-align: middle; }
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+    tbody tr:hover { background: #f0fdfa; }
+
+    .rating-tag { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; }
+    .rating-low { background: #fee2e2; color: #991b1b; }
+    .rating-high { background: #dcfce7; color: #166534; }
+    .rating-mid { background: #fef3c7; color: #92400e; }
+
+    .chip { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; }
+    .chip-area { background: #dbeafe; color: #1e40af; }
+    .chip-niche { background: #f3e5f5; color: #6a1b9a; }
+
+    .status-select { font-size: 0.72rem; padding: 3px 6px; border: 1px solid var(--gray-200); border-radius: 4px; background: white; cursor: pointer; }
+    .btn-wa { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #25D366; color: white; border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 600; white-space: nowrap; transition: all 0.2s; border: none; cursor: pointer; }
+    .btn-wa:hover { background: #1da851; }
+    .btn-wa.locked { background: #9ca3af; cursor: not-allowed; pointer-events: none; }
+    .btn-preview { padding: 4px 10px; font-size: 0.72rem; background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .btn-preview:hover { background: var(--gray-200); }
+    .empty { text-align: center; padding: 60px 20px; color: var(--gray-500); }
+    footer { text-align: center; padding: 20px; font-size: 0.78rem; color: var(--gray-500); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 12px; max-width: 520px; width: 100%; padding: 24px; max-height: 85vh; overflow-y: auto; }
+    .modal h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .modal-info { font-size: 0.82rem; color: var(--gray-500); margin-bottom: 16px; }
+    .modal textarea { width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px; font-family: inherit; font-size: 0.88rem; resize: vertical; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--gray-900); color: white; padding: 12px 20px; border-radius: 8px; font-size: 0.88rem; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 2000; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: var(--danger); }
+
+    #map { display: none; }
+
+    @media (max-width: 768px) {
+      header, .controls, .stats-bar, .filters-bar, .table-wrap, .config-section, .daily-limit-card { padding-left: 16px; padding-right: 16px; }
+      h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🎯 Lead Dashboard v2</h1>
+    <p>Rating-targeted outreach · WhatsApp-safe messaging · Bangalore</p>
+  </div>
+  <div class="status-badge"><span class="status-dot"></span> Anti-Ban Mode Active</div>
+</header>
+
+<div class="daily-limit-card">
+  <div class="limit-badge">📅 Today: <span id="sentToday">0</span> / <span id="dailyLimit">15</span></div>
+  <div class="limit-progress"><div class="limit-progress-bar" id="limitBar" style="width:0%"></div></div>
+  <div class="week-selector">
+    <button class="week-btn active" data-limit="15">Week 1 (15/day)</button>
+    <button class="week-btn" data-limit="25">Week 2 (25/day)</button>
+    <button class="week-btn" data-limit="50">Week 3+ (50/day)</button>
+  </div>
+</div>
+
+<div class="config-section">
+  <div class="section-title">🎯 Rating Target Strategy</div>
+  <div class="rating-cards">
+    <div class="rating-card active" data-strategy="both">
+      <div class="r-title">Extremes (Recommended)</div>
+      <div class="r-desc">Low & high rated — both convert well for different reasons</div>
+      <span class="r-range both">≤ 3.5⭐ + ≥ 4.5⭐</span>
+    </div>
+    <div class="rating-card" data-strategy="low">
+      <div class="r-title">Low-Rated Only</div>
+      <div class="r-desc">Struggling with reviews — need a website to control the story</div>
+      <span class="r-range low">≤ 3.5⭐</span>
+    </div>
+    <div class="rating-card" data-strategy="high">
+      <div class="r-title">High-Rated Only</div>
+      <div class="r-desc">Strong reputation, high LTV — website amplifies existing trust</div>
+      <span class="r-range high">≥ 4.5⭐</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top: 20px;">📋 Select Niches</div>
+  <div class="niche-grid" id="nicheGrid"></div>
+  <div class="niche-actions">
+    <button onclick="selectAllNiches()">Select All</button>
+    <button onclick="clearAllNiches()">Clear</button>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn btn-primary" id="scanBtn" onclick="startScan()">🔍 Start Fresh Scan</button>
+  <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+  <button class="btn btn-outline" onclick="clearAllData()">🗑️ Clear All Leads</button>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label" id="progressLabel">Starting…</div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Leads</div></div>
+  <div class="stat-card"><div class="stat-num" id="statLow">0</div><div class="stat-label">Low-Rated ≤3.5⭐</div></div>
+  <div class="stat-card"><div class="stat-num" id="statHigh">0</div><div class="stat-label">High-Rated ≥4.5⭐</div></div>
+  <div class="stat-card"><div class="stat-num" id="statSent">0</div><div class="stat-label">Sent</div></div>
+  <div class="stat-card"><div class="stat-num" id="statReplied">0</div><div class="stat-label">Replied</div></div>
+  <div class="stat-card"><div class="stat-num" id="statBooked">0</div><div class="stat-label">Booked</div></div>
+</div>
+
+<div class="filters-bar">
+  <label>Filter:</label>
+  <button class="filter-chip active" data-filter="all">All</button>
+  <button class="filter-chip" data-filter="not_sent">Not Sent</button>
+  <button class="filter-chip" data-filter="sent">Sent</button>
+  <button class="filter-chip" data-filter="replied">Replied</button>
+  <button class="filter-chip" data-filter="interested">Interested</button>
+  <button class="filter-chip" data-filter="booked">Booked</button>
+  <label style="margin-left: 12px;">Rating:</label>
+  <button class="filter-chip active" data-rating="all">All</button>
+  <button class="filter-chip" data-rating="low">Low ≤3.5</button>
+  <button class="filter-chip" data-rating="high">High ≥4.5</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Business</th><th>Niche</th><th>Area</th><th>Rating</th><th>Phone</th><th>Status</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="7" class="empty">No leads yet. Configure targets above and click "Start Fresh Scan".</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>Lead Dashboard v2 · Built for MaddyM0424</footer>
+
+<div id="map"></div>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <h3 id="modalTitle">Message Preview</h3>
+    <div class="modal-info" id="modalInfo"></div>
+    <textarea id="modalMsg"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="regenerateMessage()">🎲 Regenerate</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modalSendBtn" onclick="sendFromModal()">💬 Open in WhatsApp Business</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GOOGLE_MAPS_KEY = 'AIzaSyCDTDBK6wG6TWROAiyUtbwrsSNwSrjaQnQ';
+
+const NICHES = [
+  { key: 'interior_designer', label: '🏠 Interior Designers', query: 'interior designer' },
+  { key: 'architect', label: '🏛️ Architects', query: 'architect' },
+  { key: 'event_planner', label: '🎉 Event Planners', query: 'event planner' },
+  { key: 'wedding_photographer', label: '📸 Wedding Photographer', query: 'wedding photographer' },
+  { key: 'restaurant', label: '🍽️ Restaurants', query: 'restaurant' },
+  { key: 'salon', label: '💇 Salons & Spas', query: 'salon spa' },
+  { key: 'boutique', label: '👗 Boutiques', query: 'boutique clothing store' },
+  { key: 'jeweller', label: '💎 Jewellers', query: 'jeweller jewelry store' },
+  { key: 'real_estate', label: '🏡 Real Estate', query: 'real estate agent' },
+  { key: 'gym', label: '💪 Gyms & Trainers', query: 'gym fitness center' },
+  { key: 'dentist', label: '🦷 Dentists', query: 'dentist dental clinic' },
+  { key: 'yoga', label: '🧘 Yoga Studios', query: 'yoga studio wellness' },
+  { key: 'bakery', label: '🎂 Bakeries', query: 'bakery cake shop' },
+  { key: 'tutor', label: '📚 Coaching Centers', query: 'coaching center tuition' },
+  { key: 'service_center', label: '🔧 Car/Bike Service', query: 'car service center' }
+];
+
+const AREAS = [
+  'Indiranagar Bangalore','Koramangala Bangalore','HSR Layout Bangalore','Whitefield Bangalore',
+  'Marathahalli Bangalore','Jayanagar Bangalore','JP Nagar Bangalore','BTM Layout Bangalore',
+  'Malleshwaram Bangalore','Rajajinagar Bangalore','Electronic City Bangalore','Sarjapur Bangalore',
+  'Hebbal Bangalore','Bellandur Bangalore','Basavanagudi Bangalore'
+];
+
+const OPENERS = ['Hey!', 'Hi there', 'Hello 👋', 'Namaste', 'Hi'];
+const CTAS = [
+  'Curious if that\'s something you\'re thinking about?',
+  'Would you be open to a quick chat?',
+  'Want me to share a free preview?',
+  'Worth a 2-min conversation?',
+  'Should I send you a quick sample of what it could look like?'
+];
+
+const HOOKS_LOW = {
+  interior_designer: 'A website lets clients see your best 20 projects — reviews only show the loudest voices, not your work.',
+  architect: 'Serious builders check your portfolio online before calling. Reviews aren\'t telling your full story.',
+  event_planner: 'Weddings are a trust business. A website with your past events lets clients bypass the reviews and see real quality.',
+  wedding_photographer: 'Your best work should speak, not one bad review. A portfolio website changes what they see first.',
+  restaurant: 'Google reviews get all the attention. A website with your menu, ambience and photos shifts the story back to your food.',
+  salon: 'Website with your services, prices and before/after photos gives customers the confidence reviews don\'t.',
+  boutique: 'Customers judge fast. Website with your collection lets them fall in love before checking reviews.',
+  jeweller: 'High-value purchases start online. Website with certifications + catalog gives serious buyers the trust reviews can\'t.',
+  real_estate: 'Buyers check portals first, agents second. Own website + listings makes YOU the destination, not one of 200.',
+  gym: 'Sign-ups happen when someone sees trainers + programs. Not reviews. Website changes what they compare on.',
+  dentist: 'Patients research procedures + credentials before booking ₹10K+ work. Website gives them what reviews don\'t.',
+  yoga: 'Reviews get old. Website with class schedule + teacher profiles is what new students actually book from.',
+  bakery: 'A website lets you show cake designs + take orders directly — bypasses whatever reviews say.',
+  tutor: 'Parents research results + faculty for months. Website is what convinces them beyond reviews.',
+  service_center: 'For big repairs, customers Google + check credibility. Website gives them the trust to walk in.'
+};
+
+const HOOKS_HIGH = {
+  interior_designer: 'Your reviews are gold — but they\'re not converting because there\'s no website to send serious clients to.',
+  architect: 'With your track record, you should be closing ₹1Cr+ commercial projects. A proper website unlocks that tier.',
+  event_planner: 'Reviews are stellar 🎉 But high-budget clients (₹5L+ weddings) shortlist from websites, not GMB. You\'re missing them.',
+  wedding_photographer: 'Your rating puts you in the top 5% — but couples booking ₹1L+ photographers filter by website. You\'re invisible to them.',
+  restaurant: 'Great food + great reviews = you\'re losing 25-30% to Zomato/Swiggy commissions. Own website + direct orders = keep it all.',
+  salon: 'Your reviews are great, but clients book at 10PM when you\'re closed. Website with online booking = 30-40% more appointments.',
+  boutique: 'Loved your reviews! But your Insta viewers aren\'t converting because there\'s no website to buy or enquire from.',
+  jeweller: 'With your reputation, ₹80K+ walk-ins are common. But 5-6x more are Googling first and can\'t find you online.',
+  real_estate: 'Solid rating means clients trust you. Own website = stop paying MagicBricks 40% cut per lead.',
+  gym: 'Great community you\'ve built! Website with class schedules + trial booking = 2x more new signups from same reviews.',
+  dentist: 'Reputation is excellent — but patients researching high-value procedures need your credentials online, not just in reviews.',
+  yoga: 'Your students love you! Website with drop-in classes + workshop bookings brings in weekend traffic you\'re missing.',
+  bakery: 'Your rating + cakes look amazing! Website with order form triples volume — bakeries handling 30+ orders/week need this.',
+  tutor: 'Great results speak for themselves. Parents shortlist coaching centers online — website with student results = 50%+ more admissions.',
+  service_center: 'Regulars trust you. But ₹15K+ jobs go to authorized centers because they show credentials online. Fix that.'
+};
+
+let selectedNiches = new Set();
+let ratingStrategy = 'both';
+let dailyLimit = 15;
+let allLeads = JSON.parse(localStorage.getItem('leads_v2') || '[]');
+let leadStatus = JSON.parse(localStorage.getItem('leadStatus_v2') || '{}');
+let sentTimestamps = JSON.parse(localStorage.getItem('sentTimestamps_v2') || '[]');
+let statusFilter = 'all';
+let ratingFilter = 'all';
+let scanning = false;
+let currentModalLead = null;
+let currentModalMessage = '';
+const SEND_LOCK_MS = 3 * 60 * 1000;
+let lastSendTime = parseInt(localStorage.getItem('lastSendTime_v2') || '0');
+
+function renderNiches() {
+  const grid = document.getElementById('nicheGrid');
+  grid.innerHTML = NICHES.map(n => `<div class="niche-chip" data-key="${n.key}" onclick="toggleNiche('${n.key}')">${n.label}</div>`).join('');
+}
+function toggleNiche(key) {
+  if (selectedNiches.has(key)) selectedNiches.delete(key); else selectedNiches.add(key);
+  document.querySelector(`[data-key="${key}"]`).classList.toggle('selected');
+}
+function selectAllNiches() {
+  selectedNiches = new Set(NICHES.map(n => n.key));
+  document.querySelectorAll('.niche-chip').forEach(c => c.classList.add('selected'));
+}
+function clearAllNiches() {
+  selectedNiches.clear();
+  document.querySelectorAll('.niche-chip').forEach(c => c.classList.remove('selected'));
+}
+
+document.querySelectorAll('.rating-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.rating-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    ratingStrategy = card.dataset.strategy;
+  });
+});
+
+document.querySelectorAll('.week-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    dailyLimit = parseInt(btn.dataset.limit);
+    document.getElementById('dailyLimit').textContent = dailyLimit;
+    updateDailyProgress();
+  });
+});
+
+function getTodaysSentCount() {
+  const today = new Date().toDateString();
+  return sentTimestamps.filter(ts => new Date(ts).toDateString() === today).length;
+}
+function updateDailyProgress() {
+  const sent = getTodaysSentCount();
+  document.getElementById('sentToday').textContent = sent;
+  const pct = Math.min(100, (sent / dailyLimit) * 100);
+  const bar = document.getElementById('limitBar');
+  bar.style.width = pct + '%';
+  bar.className = 'limit-progress-bar' + (pct >= 100 ? ' stop' : pct >= 80 ? ' warn' : '');
+}
+
+document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip[data-filter]').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    statusFilter = chip.dataset.filter;
+    renderTable();
+  });
+});
+document.querySelectorAll('.filter-chip[data-rating]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip[data-rating]').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    ratingFilter = chip.dataset.rating;
+    renderTable();
+  });
+});
+
+let service, queue = [], queueIdx = 0, currentPage = 1;
+
+function startScan() {
+  if (scanning) return;
+  if (selectedNiches.size === 0) { toast('Please select at least one niche', true); return; }
+  scanning = true;
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('scanBtn').textContent = 'Scanning…';
+  document.getElementById('progressWrap').style.display = 'block';
+  queue = [];
+  for (const nicheKey of selectedNiches) {
+    const niche = NICHES.find(n => n.key === nicheKey);
+    for (const area of AREAS) queue.push({ niche, area });
+  }
+  queueIdx = 0;
+  currentPage = 1;
+  if (!window.google || !window.google.maps) loadGoogleMaps().then(processNext);
+  else processNext();
+}
+
+function loadGoogleMaps() {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places&callback=onMapsReady`;
+    window.onMapsReady = resolve;
+    document.head.appendChild(script);
+  });
+}
+
+function processNext() {
+  if (queueIdx >= queue.length) { finishScan(); return; }
+  const { niche, area } = queue[queueIdx];
+  currentPage = 1;
+  updateProgress(`Scanning ${niche.label} in ${area} — page 1/3`);
+  if (!service) service = new google.maps.places.PlacesService(document.getElementById('map'));
+  service.textSearch({ query: `${niche.query} in ${area}` }, onPageResults);
+}
+
+function onPageResults(results, status, pagination) {
+  const { niche, area } = queue[queueIdx];
+  if (status !== 'OK' || !results || results.length === 0) {
+    queueIdx++;
+    setTimeout(processNext, 500);
+    return;
+  }
+  const fresh = results.filter(r => !allLeads.some(l => l.place_id === r.place_id));
+  fetchDetails(fresh, 0, { niche, area }, () => {
+    if (pagination && pagination.hasNextPage && currentPage < 3) {
+      currentPage++;
+      updateProgress(`Scanning ${niche.label} in ${area} — page ${currentPage}/3`);
+      setTimeout(() => pagination.nextPage(), 2000);
+    } else {
+      queueIdx++;
+      setTimeout(processNext, 500);
+    }
+  });
+}
+
+function fetchDetails(list, idx, ctx, done) {
+  if (idx >= list.length) return done();
+  const place = list[idx];
+  service.getDetails({
+    placeId: place.place_id,
+    fields: ['name','formatted_address','formatted_phone_number','international_phone_number','website','rating','user_ratings_total','url','place_id']
+  }, (details, status) => {
+    if (status === 'OK' && details) {
+      const rating = details.rating || 0;
+      const hasPhone = !!(details.formatted_phone_number || details.international_phone_number);
+      const hasWebsite = !!details.website;
+      let matchesRating = false;
+      if (ratingStrategy === 'both') matchesRating = rating > 0 && (rating <= 3.5 || rating >= 4.5);
+      else if (ratingStrategy === 'low') matchesRating = rating > 0 && rating <= 3.5;
+      else if (ratingStrategy === 'high') matchesRating = rating >= 4.5;
+      if (!hasWebsite && hasPhone && matchesRating) {
+        allLeads.push({
+          place_id: details.place_id,
+          name: details.name,
+          niche: ctx.niche.key,
+          area: ctx.area.split(' Bangalore')[0],
+          phone: details.formatted_phone_number || details.international_phone_number,
+          rating: rating,
+          reviews: details.user_ratings_total || 0,
+          address: details.formatted_address,
+          gmb_url: details.url,
+          addedAt: new Date().toISOString()
+        });
+        localStorage.setItem('leads_v2', JSON.stringify(allLeads));
+        renderTable();
+        updateStats();
+      }
+    }
+    setTimeout(() => fetchDetails(list, idx + 1, ctx, done), 200);
+  });
+}
+
+function updateProgress(label) {
+  const pct = (queueIdx / queue.length) * 100;
+  document.getElementById('progressLabel').textContent = `${label} · ${queueIdx}/${queue.length} completed`;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function finishScan() {
+  scanning = false;
+  document.getElementById('scanBtn').disabled = false;
+  document.getElementById('scanBtn').textContent = '🔍 Start Fresh Scan';
+  document.getElementById('progressWrap').style.display = 'none';
+  toast(`Scan complete! Found ${allLeads.length} total leads.`);
+}
+
+function generateMessage(lead) {
+  const opener = OPENERS[Math.floor(Math.random() * OPENERS.length)];
+  const cta = CTAS[Math.floor(Math.random() * CTAS.length)];
+  const isLow = lead.rating <= 3.5;
+  const hooks = isLow ? HOOKS_LOW : HOOKS_HIGH;
+  const hook = hooks[lead.niche] || 'A simple website could help you stand out online.';
+  const details = [
+    `Came across ${lead.name} on Google Maps`,
+    `Saw your listing for ${lead.name}`,
+    `Was checking businesses in ${lead.area}`,
+    `Noticed ${lead.name} in the area`
+  ];
+  const detail = details[Math.floor(Math.random() * details.length)];
+  const ratingRef = isLow ? '' : lead.rating >= 4.7 ? `\n\nYour ${lead.rating}⭐ rating with ${lead.reviews} reviews is honestly impressive.` : '';
+  return `${opener} ${detail} — and noticed no website yet.${ratingRef}
+
+${hook}
+
+I'm building a small portfolio this month for businesses in ${lead.area}. Free demo, no commitment.
+
+${cta}`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  const filtered = allLeads.filter(l => {
+    const status = leadStatus[l.place_id] || 'not_sent';
+    if (statusFilter !== 'all' && status !== statusFilter) return false;
+    if (ratingFilter === 'low' && l.rating > 3.5) return false;
+    if (ratingFilter === 'high' && l.rating < 4.5) return false;
+    return true;
+  });
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty">No leads match current filters.</td></tr>`;
+    return;
+  }
+  const now = Date.now();
+  const lockActive = (now - lastSendTime) < SEND_LOCK_MS;
+  const lockRemaining = lockActive ? Math.ceil((SEND_LOCK_MS - (now - lastSendTime)) / 1000 / 60) : 0;
+  tbody.innerHTML = filtered.map(l => {
+    const status = leadStatus[l.place_id] || 'not_sent';
+    const nicheLabel = (NICHES.find(n => n.key === l.niche) || {}).label || l.niche;
+    const ratingClass = l.rating <= 3.5 ? 'rating-low' : l.rating >= 4.5 ? 'rating-high' : 'rating-mid';
+    const overLimit = getTodaysSentCount() >= dailyLimit;
+    const canSend = !lockActive && !overLimit;
+    const sendBtnClass = canSend ? '' : 'locked';
+    const sendBtnLabel = overLimit ? '🛑 Daily limit' : lockActive ? `⏱️ ${lockRemaining}m` : '💬 Send';
+    return `<tr>
+      <td><strong>${l.name}</strong><br><small style="color:#6b7280;">${(l.address||'').substring(0,50)}</small></td>
+      <td><span class="chip chip-niche">${nicheLabel}</span></td>
+      <td><span class="chip chip-area">${l.area}</span></td>
+      <td><span class="rating-tag ${ratingClass}">⭐ ${l.rating.toFixed(1)} · ${l.reviews}</span></td>
+      <td>${l.phone}</td>
+      <td>
+        <select class="status-select" onchange="updateStatus('${l.place_id}', this.value)">
+          <option value="not_sent" ${status==='not_sent'?'selected':''}>Not Sent</option>
+          <option value="sent" ${status==='sent'?'selected':''}>Sent</option>
+          <option value="replied" ${status==='replied'?'selected':''}>Replied</option>
+          <option value="interested" ${status==='interested'?'selected':''}>Interested</option>
+          <option value="not_interested" ${status==='not_interested'?'selected':''}>Not Interested</option>
+          <option value="booked" ${status==='booked'?'selected':''}>Booked ✅</option>
+        </select>
+      </td>
+      <td>
+        <button class="btn-preview" onclick="openModal('${l.place_id}')">👁️ Preview</button>
+        <button class="btn-wa ${sendBtnClass}" onclick="quickSend('${l.place_id}')">${sendBtnLabel}</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStatus(placeId, status) {
+  leadStatus[placeId] = status;
+  if (status === 'sent') {
+    sentTimestamps.push(new Date().toISOString());
+    localStorage.setItem('sentTimestamps_v2', JSON.stringify(sentTimestamps));
+    lastSendTime = Date.now();
+    localStorage.setItem('lastSendTime_v2', lastSendTime);
+  }
+  localStorage.setItem('leadStatus_v2', JSON.stringify(leadStatus));
+  updateStats();
+  updateDailyProgress();
+  renderTable();
+}
+
+function openModal(placeId) {
+  const lead = allLeads.find(l => l.place_id === placeId);
+  if (!lead) return;
+  currentModalLead = lead;
+  currentModalMessage = generateMessage(lead);
+  document.getElementById('modalTitle').textContent = `Preview: ${lead.name}`;
+  document.getElementById('modalInfo').textContent = `⭐ ${lead.rating} · ${lead.phone} · Message is randomized to avoid spam detection`;
+  document.getElementById('modalMsg').value = currentModalMessage;
+  document.getElementById('modal').classList.add('show');
+}
+
+function regenerateMessage() {
+  if (!currentModalLead) return;
+  currentModalMessage = generateMessage(currentModalLead);
+  document.getElementById('modalMsg').value = currentModalMessage;
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  currentModalLead = null;
+}
+
+function sendFromModal() {
+  if (!currentModalLead) return;
+  const msg = document.getElementById('modalMsg').value;
+  const phone = currentModalLead.phone.replace(/\D/g, '');
+  const num = phone.startsWith('91') ? phone : '91' + phone;
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank');
+  updateStatus(currentModalLead.place_id, 'sent');
+  closeModal();
+  toast(`Message sent to ${currentModalLead.name} · Locked for 3 min`);
+}
+
+function quickSend(placeId) {
+  const lead = allLeads.find(l => l.place_id === placeId);
+  if (!lead) return;
+  if (getTodaysSentCount() >= dailyLimit) { toast('Daily limit reached! Come back tomorrow.', true); return; }
+  if (Date.now() - lastSendTime < SEND_LOCK_MS) { toast('Send throttled — wait before next message.', true); return; }
+  const msg = generateMessage(lead);
+  const phone = lead.phone.replace(/\D/g, '');
+  const num = phone.startsWith('91') ? phone : '91' + phone;
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank');
+  updateStatus(placeId, 'sent');
+  toast(`Sent to ${lead.name} · 3-min lock active`);
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allLeads.length;
+  document.getElementById('statLow').textContent = allLeads.filter(l => l.rating <= 3.5).length;
+  document.getElementById('statHigh').textContent = allLeads.filter(l => l.rating >= 4.5).length;
+  document.getElementById('statSent').textContent = Object.values(leadStatus).filter(s => s === 'sent' || s === 'replied' || s === 'interested' || s === 'booked').length;
+  document.getElementById('statReplied').textContent = Object.values(leadStatus).filter(s => s === 'replied' || s === 'interested' || s === 'booked').length;
+  document.getElementById('statBooked').textContent = Object.values(leadStatus).filter(s => s === 'booked').length;
+}
+
+function clearAllData() {
+  if (!confirm('Delete ALL leads and status data? This cannot be undone.')) return;
+  allLeads = [];
+  leadStatus = {};
+  sentTimestamps = [];
+  lastSendTime = 0;
+  localStorage.removeItem('leads_v2');
+  localStorage.removeItem('leadStatus_v2');
+  localStorage.removeItem('sentTimestamps_v2');
+  localStorage.removeItem('lastSendTime_v2');
+  renderTable();
+  updateStats();
+  updateDailyProgress();
+  toast('All data cleared.');
+}
+
+function exportCSV() {
+  if (allLeads.length === 0) { toast('No leads to export.', true); return; }
+  const headers = ['Name','Niche','Area','Rating','Reviews','Phone','Status','Address','GMB URL'];
+  const rows = allLeads.map(l => [
+    l.name, l.niche, l.area, l.rating, l.reviews, l.phone,
+    leadStatus[l.place_id] || 'not_sent', (l.address||'').replace(/,/g,';'), l.gmb_url||''
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `leads-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('CSV exported!');
+}
+
+function toast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+renderNiches();
+renderTable();
+updateStats();
+updateDailyProgress();
+setInterval(renderTable, 30000);
+</script>
+</body>
+</html>
