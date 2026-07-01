@@ -35,6 +35,7 @@
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: pulse 2s infinite; }
     @keyframes pulse { 50% { opacity: 0.5; } }
 
+    /* Daily Limit Card */
     .daily-limit-card {
       background: white; padding: 16px 30px; border-bottom: 1px solid var(--gray-200);
       display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
@@ -44,35 +45,56 @@
       background: var(--gray-100); padding: 8px 16px; border-radius: 8px;
       font-size: 0.9rem; font-weight: 600;
     }
-    .limit-progress { flex: 1; min-width: 200px; background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden; }
-    .limit-progress-bar { height: 100%; background: var(--success); transition: all 0.3s; }
+    .limit-progress {
+      flex: 1; min-width: 200px;
+      background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;
+    }
+    .limit-progress-bar {
+      height: 100%; background: var(--success); transition: all 0.3s;
+    }
     .limit-progress-bar.warn { background: var(--accent); }
     .limit-progress-bar.stop { background: var(--danger); }
     .week-selector { display: flex; gap: 6px; }
-    .week-btn { padding: 6px 14px; font-size: 0.8rem; border: 1px solid var(--gray-200); background: white; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .week-btn {
+      padding: 6px 14px; font-size: 0.8rem; border: 1px solid var(--gray-200);
+      background: white; border-radius: 6px; cursor: pointer; font-weight: 600;
+    }
     .week-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+    /* Config Section */
     .config-section { background: white; padding: 20px 30px; border-bottom: 1px solid var(--gray-200); }
     .section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); margin-bottom: 12px; }
 
+    /* Rating Filter Cards */
     .rating-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .rating-card { border: 2px solid var(--gray-200); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; background: white; }
+    .rating-card {
+      border: 2px solid var(--gray-200); border-radius: 10px; padding: 16px;
+      cursor: pointer; transition: all 0.2s; background: white;
+    }
     .rating-card:hover { border-color: var(--primary); }
     .rating-card.active { border-color: var(--primary); background: #f0fdfa; }
     .rating-card .r-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
     .rating-card .r-desc { font-size: 0.78rem; color: var(--gray-500); line-height: 1.5; }
-    .rating-card .r-range { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .rating-card .r-range {
+      display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 4px;
+      font-size: 0.72rem; font-weight: 700;
+    }
     .r-range.low { background: #fee2e2; color: #991b1b; }
     .r-range.high { background: #dcfce7; color: #166534; }
     .r-range.both { background: #dbeafe; color: #1e40af; }
 
+    /* Niche chips */
     .niche-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-    .niche-chip { padding: 6px 14px; border: 2px solid var(--gray-200); border-radius: 20px; font-size: 0.82rem; cursor: pointer; background: white; transition: all 0.15s; user-select: none; }
+    .niche-chip {
+      padding: 6px 14px; border: 2px solid var(--gray-200); border-radius: 20px;
+      font-size: 0.82rem; cursor: pointer; background: white; transition: all 0.15s; user-select: none;
+    }
     .niche-chip:hover { border-color: var(--primary); }
     .niche-chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
     .niche-actions { margin-top: 10px; display: flex; gap: 8px; }
     .niche-actions button { font-size: 0.75rem; padding: 4px 12px; border: 1px solid var(--gray-200); background: white; border-radius: 4px; cursor: pointer; }
 
+    /* Controls */
     .controls { padding: 16px 30px; background: white; border-bottom: 1px solid var(--gray-200); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-primary { background: var(--primary); color: white; }
@@ -81,21 +103,31 @@
     .btn-outline { background: white; color: var(--gray-700); border: 1px solid var(--gray-200); }
     .btn-outline:hover { background: var(--gray-100); }
 
+    /* Progress */
     .progress-wrap { display: none; padding: 12px 30px; background: #fffbeb; border-bottom: 1px solid #fde68a; }
     .progress-label { font-size: 0.82rem; color: var(--gray-700); margin-bottom: 6px; }
     .progress-bar-bg { background: var(--gray-200); border-radius: 6px; height: 8px; overflow: hidden; }
     .progress-bar-fill { background: var(--accent); height: 100%; transition: width 0.4s; }
 
-    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; padding: 16px 30px; background: #f0fdfa; border-bottom: 1px solid var(--gray-200); }
+    /* Stats */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px; padding: 16px 30px; background: #f0fdfa; border-bottom: 1px solid var(--gray-200);
+    }
     .stat-card { background: white; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gray-200); }
     .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
     .stat-label { font-size: 0.72rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
+    /* Filters bar */
     .filters-bar { padding: 12px 30px; background: white; border-bottom: 1px solid var(--gray-200); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .filters-bar label { font-size: 0.78rem; color: var(--gray-500); font-weight: 600; margin-right: 4px; }
-    .filter-chip { padding: 5px 12px; font-size: 0.78rem; border: 1px solid var(--gray-200); background: white; border-radius: 100px; cursor: pointer; transition: all 0.15s; }
+    .filter-chip {
+      padding: 5px 12px; font-size: 0.78rem; border: 1px solid var(--gray-200);
+      background: white; border-radius: 100px; cursor: pointer; transition: all 0.15s;
+    }
     .filter-chip.active { background: var(--gray-900); color: white; border-color: var(--gray-900); }
 
+    /* Table */
     .table-wrap { padding: 20px 30px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
     thead { background: var(--gray-900); color: white; }
@@ -111,25 +143,57 @@
     .chip { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; }
     .chip-area { background: #dbeafe; color: #1e40af; }
     .chip-niche { background: #f3e5f5; color: #6a1b9a; }
+    .chip-status { padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .status-not_sent { background: var(--gray-100); color: var(--gray-500); }
+    .status-sent { background: #dbeafe; color: #1e40af; }
+    .status-replied { background: #fef3c7; color: #92400e; }
+    .status-interested { background: #dcfce7; color: #166534; }
+    .status-not_interested { background: #fee2e2; color: #991b1b; }
+    .status-booked { background: #d1fae5; color: #065f46; }
 
-    .status-select { font-size: 0.72rem; padding: 3px 6px; border: 1px solid var(--gray-200); border-radius: 4px; background: white; cursor: pointer; }
-    .btn-wa { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #25D366; color: white; border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 600; white-space: nowrap; transition: all 0.2s; border: none; cursor: pointer; }
+    .status-select {
+      font-size: 0.72rem; padding: 3px 6px; border: 1px solid var(--gray-200);
+      border-radius: 4px; background: white; cursor: pointer;
+    }
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 12px; background: #25D366; color: white; border-radius: 6px;
+      text-decoration: none; font-size: 0.78rem; font-weight: 600; white-space: nowrap; transition: all 0.2s;
+    }
     .btn-wa:hover { background: #1da851; }
-    .btn-wa.locked { background: #9ca3af; cursor: not-allowed; pointer-events: none; }
-    .btn-preview { padding: 4px 10px; font-size: 0.72rem; background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .btn-wa:disabled, .btn-wa.locked { background: #9ca3af; cursor: not-allowed; pointer-events: none; }
+    .btn-preview {
+      padding: 4px 10px; font-size: 0.72rem; background: var(--gray-100); color: var(--gray-700);
+      border: 1px solid var(--gray-200); border-radius: 4px; cursor: pointer; font-weight: 600;
+    }
     .btn-preview:hover { background: var(--gray-200); }
     .empty { text-align: center; padding: 60px 20px; color: var(--gray-500); }
     footer { text-align: center; padding: 20px; font-size: 0.78rem; color: var(--gray-500); }
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
     .modal-overlay.show { display: flex; }
-    .modal { background: white; border-radius: 12px; max-width: 520px; width: 100%; padding: 24px; max-height: 85vh; overflow-y: auto; }
+    .modal {
+      background: white; border-radius: 12px; max-width: 520px; width: 100%;
+      padding: 24px; max-height: 85vh; overflow-y: auto;
+    }
     .modal h3 { font-size: 1.1rem; margin-bottom: 12px; }
     .modal-info { font-size: 0.82rem; color: var(--gray-500); margin-bottom: 16px; }
-    .modal textarea { width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px; font-family: inherit; font-size: 0.88rem; resize: vertical; line-height: 1.6; }
+    .modal textarea {
+      width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--gray-200);
+      border-radius: 8px; font-family: inherit; font-size: 0.88rem; resize: vertical; line-height: 1.6;
+    }
     .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
 
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--gray-900); color: white; padding: 12px 20px; border-radius: 8px; font-size: 0.88rem; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 2000; }
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px; background: var(--gray-900); color: white;
+      padding: 12px 20px; border-radius: 8px; font-size: 0.88rem;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 2000;
+    }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.error { background: var(--danger); }
 
@@ -151,6 +215,7 @@
   <div class="status-badge"><span class="status-dot"></span> Anti-Ban Mode Active</div>
 </header>
 
+<!-- Daily Limit Tracker -->
 <div class="daily-limit-card">
   <div class="limit-badge">📅 Today: <span id="sentToday">0</span> / <span id="dailyLimit">15</span></div>
   <div class="limit-progress"><div class="limit-progress-bar" id="limitBar" style="width:0%"></div></div>
@@ -161,6 +226,7 @@
   </div>
 </div>
 
+<!-- Rating Target Selection -->
 <div class="config-section">
   <div class="section-title">🎯 Rating Target Strategy</div>
   <div class="rating-cards">
@@ -182,10 +248,17 @@
   </div>
 
   <div class="section-title" style="margin-top: 20px;">📋 Select Niches</div>
+  <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+    <input type="text" id="customNicheInput" placeholder="Add custom niche (e.g., makeup artist, pet grooming, car dealer...)"
+           style="flex: 1; min-width: 240px; padding: 8px 14px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 0.88rem; outline: none;"
+           onkeypress="if(event.key==='Enter'){addCustomNiche();event.preventDefault();}">
+    <button class="btn btn-primary" style="padding: 8px 18px;" onclick="addCustomNiche()">+ Add Niche</button>
+  </div>
   <div class="niche-grid" id="nicheGrid"></div>
   <div class="niche-actions">
     <button onclick="selectAllNiches()">Select All</button>
-    <button onclick="clearAllNiches()">Clear</button>
+    <button onclick="clearAllNiches()">Clear Selection</button>
+    <button onclick="removeCustomNiches()" style="color: var(--danger);">🗑️ Remove All Custom</button>
   </div>
 </div>
 
@@ -227,7 +300,13 @@
   <table>
     <thead>
       <tr>
-        <th>Business</th><th>Niche</th><th>Area</th><th>Rating</th><th>Phone</th><th>Status</th><th>Action</th>
+        <th>Business</th>
+        <th>Niche</th>
+        <th>Area</th>
+        <th>Rating</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody id="tbody">
@@ -240,6 +319,7 @@
 
 <div id="map"></div>
 
+<!-- Message Preview Modal -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this) closeModal()">
   <div class="modal">
     <h3 id="modalTitle">Message Preview</h3>
@@ -256,9 +336,12 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ========================================
+   CONFIG & CONSTANTS
+   ======================================== */
 const GOOGLE_MAPS_KEY = 'AIzaSyCDTDBK6wG6TWROAiyUtbwrsSNwSrjaQnQ';
 
-const NICHES = [
+const DEFAULT_NICHES = [
   { key: 'interior_designer', label: '🏠 Interior Designers', query: 'interior designer' },
   { key: 'architect', label: '🏛️ Architects', query: 'architect' },
   { key: 'event_planner', label: '🎉 Event Planners', query: 'event planner' },
@@ -276,6 +359,9 @@ const NICHES = [
   { key: 'service_center', label: '🔧 Car/Bike Service', query: 'car service center' }
 ];
 
+let customNiches = JSON.parse(localStorage.getItem('customNiches_v2') || '[]');
+let NICHES = [...DEFAULT_NICHES, ...customNiches];
+
 const AREAS = [
   'Indiranagar Bangalore','Koramangala Bangalore','HSR Layout Bangalore','Whitefield Bangalore',
   'Marathahalli Bangalore','Jayanagar Bangalore','JP Nagar Bangalore','BTM Layout Bangalore',
@@ -283,7 +369,11 @@ const AREAS = [
   'Hebbal Bangalore','Bellandur Bangalore','Basavanagudi Bangalore'
 ];
 
+/* ========================================
+   MESSAGE RANDOMIZATION SYSTEM
+   ======================================== */
 const OPENERS = ['Hey!', 'Hi there', 'Hello 👋', 'Namaste', 'Hi'];
+
 const CTAS = [
   'Curious if that\'s something you\'re thinking about?',
   'Would you be open to a quick chat?',
@@ -292,10 +382,11 @@ const CTAS = [
   'Should I send you a quick sample of what it could look like?'
 ];
 
+// Niche-specific value hooks — LOW RATING angle
 const HOOKS_LOW = {
   interior_designer: 'A website lets clients see your best 20 projects — reviews only show the loudest voices, not your work.',
   architect: 'Serious builders check your portfolio online before calling. Reviews aren\'t telling your full story.',
-  event_planner: 'Weddings are a trust business. A website with your past events lets clients bypass the reviews and see real quality.',
+  event_planner: 'Weddings are a trust business. A website with your past events lets clients bypass the reviews and see the real quality.',
   wedding_photographer: 'Your best work should speak, not one bad review. A portfolio website changes what they see first.',
   restaurant: 'Google reviews get all the attention. A website with your menu, ambience and photos shifts the story back to your food.',
   salon: 'Website with your services, prices and before/after photos gives customers the confidence reviews don\'t.',
@@ -310,8 +401,9 @@ const HOOKS_LOW = {
   service_center: 'For big repairs, customers Google + check credibility. Website gives them the trust to walk in.'
 };
 
+// Niche-specific value hooks — HIGH RATING angle
 const HOOKS_HIGH = {
-  interior_designer: 'Your reviews are gold — but they\'re not converting because there\'s no website to send serious clients to.',
+  interior_designer: 'Your 4.8⭐ reviews are gold — but they\'re not converting because there\'s no website to send serious clients to.',
   architect: 'With your track record, you should be closing ₹1Cr+ commercial projects. A proper website unlocks that tier.',
   event_planner: 'Reviews are stellar 🎉 But high-budget clients (₹5L+ weddings) shortlist from websites, not GMB. You\'re missing them.',
   wedding_photographer: 'Your rating puts you in the top 5% — but couples booking ₹1L+ photographers filter by website. You\'re invisible to them.',
@@ -320,14 +412,17 @@ const HOOKS_HIGH = {
   boutique: 'Loved your reviews! But your Insta viewers aren\'t converting because there\'s no website to buy or enquire from.',
   jeweller: 'With your reputation, ₹80K+ walk-ins are common. But 5-6x more are Googling first and can\'t find you online.',
   real_estate: 'Solid rating means clients trust you. Own website = stop paying MagicBricks 40% cut per lead.',
-  gym: 'Great community you\'ve built! Website with class schedules + trial booking = 2x more new signups from same reviews.',
+  gym: 'Great community you\'ve built! Website with class schedules + trial booking = 2x more new signups from the same reviews.',
   dentist: 'Reputation is excellent — but patients researching high-value procedures need your credentials online, not just in reviews.',
   yoga: 'Your students love you! Website with drop-in classes + workshop bookings brings in weekend traffic you\'re missing.',
   bakery: 'Your rating + cakes look amazing! Website with order form triples volume — bakeries handling 30+ orders/week need this.',
-  tutor: 'Great results speak for themselves. Parents shortlist coaching centers online — website with student results = 50%+ more admissions.',
+  tutor: 'Great results speak for themselves. Parents shortlist coaching centers online — website with your student results = 50%+ more admissions.',
   service_center: 'Regulars trust you. But ₹15K+ jobs go to authorized centers because they show credentials online. Fix that.'
 };
 
+/* ========================================
+   STATE
+   ======================================== */
 let selectedNiches = new Set();
 let ratingStrategy = 'both';
 let dailyLimit = 15;
@@ -339,15 +434,58 @@ let ratingFilter = 'all';
 let scanning = false;
 let currentModalLead = null;
 let currentModalMessage = '';
-const SEND_LOCK_MS = 3 * 60 * 1000;
+const SEND_LOCK_MS = 3 * 60 * 1000; // 3 min throttle
 let lastSendTime = parseInt(localStorage.getItem('lastSendTime_v2') || '0');
 
+/* ========================================
+   RENDER NICHES
+   ======================================== */
 function renderNiches() {
   const grid = document.getElementById('nicheGrid');
-  grid.innerHTML = NICHES.map(n => `<div class="niche-chip" data-key="${n.key}" onclick="toggleNiche('${n.key}')">${n.label}</div>`).join('');
+  grid.innerHTML = NICHES.map(n => {
+    const removeBtn = n.custom ? `<span onclick="event.stopPropagation();removeCustomNiche('${n.key}')" style="margin-left:6px;color:#dc2626;font-weight:bold;cursor:pointer;">×</span>` : '';
+    const sel = selectedNiches.has(n.key) ? 'selected' : '';
+    return `<div class="niche-chip ${sel}" data-key="${n.key}" onclick="toggleNiche('${n.key}')">${n.label}${removeBtn}</div>`;
+  }).join('');
+}
+
+function addCustomNiche() {
+  const input = document.getElementById('customNicheInput');
+  const val = input.value.trim();
+  if (!val) return;
+  const key = 'custom_' + val.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  if (NICHES.some(n => n.key === key)) { toast('This niche already exists', true); return; }
+  const newNiche = { key, label: '✨ ' + val, query: val, custom: true };
+  customNiches.push(newNiche);
+  NICHES.push(newNiche);
+  localStorage.setItem('customNiches_v2', JSON.stringify(customNiches));
+  selectedNiches.add(key);
+  input.value = '';
+  renderNiches();
+  toast(`Added "${val}"`);
+}
+
+function removeCustomNiche(key) {
+  customNiches = customNiches.filter(n => n.key !== key);
+  NICHES = NICHES.filter(n => n.key !== key);
+  selectedNiches.delete(key);
+  localStorage.setItem('customNiches_v2', JSON.stringify(customNiches));
+  renderNiches();
+}
+
+function removeCustomNiches() {
+  if (customNiches.length === 0) { toast('No custom niches to remove', true); return; }
+  if (!confirm(`Remove all ${customNiches.length} custom niches?`)) return;
+  customNiches.forEach(n => selectedNiches.delete(n.key));
+  customNiches = [];
+  NICHES = [...DEFAULT_NICHES];
+  localStorage.removeItem('customNiches_v2');
+  renderNiches();
+  toast('Custom niches removed');
 }
 function toggleNiche(key) {
-  if (selectedNiches.has(key)) selectedNiches.delete(key); else selectedNiches.add(key);
+  if (selectedNiches.has(key)) selectedNiches.delete(key);
+  else selectedNiches.add(key);
   document.querySelector(`[data-key="${key}"]`).classList.toggle('selected');
 }
 function selectAllNiches() {
@@ -359,6 +497,9 @@ function clearAllNiches() {
   document.querySelectorAll('.niche-chip').forEach(c => c.classList.remove('selected'));
 }
 
+/* ========================================
+   RATING STRATEGY
+   ======================================== */
 document.querySelectorAll('.rating-card').forEach(card => {
   card.addEventListener('click', () => {
     document.querySelectorAll('.rating-card').forEach(c => c.classList.remove('active'));
@@ -367,6 +508,9 @@ document.querySelectorAll('.rating-card').forEach(card => {
   });
 });
 
+/* ========================================
+   WEEK / DAILY LIMIT
+   ======================================== */
 document.querySelectorAll('.week-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
@@ -390,6 +534,9 @@ function updateDailyProgress() {
   bar.className = 'limit-progress-bar' + (pct >= 100 ? ' stop' : pct >= 80 ? ' warn' : '');
 }
 
+/* ========================================
+   FILTERS
+   ======================================== */
 document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
   chip.addEventListener('click', () => {
     document.querySelectorAll('.filter-chip[data-filter]').forEach(c => c.classList.remove('active'));
@@ -407,6 +554,9 @@ document.querySelectorAll('.filter-chip[data-rating]').forEach(chip => {
   });
 });
 
+/* ========================================
+   SCAN LOGIC
+   ======================================== */
 let service, queue = [], queueIdx = 0, currentPage = 1;
 
 function startScan() {
@@ -416,15 +566,22 @@ function startScan() {
   document.getElementById('scanBtn').disabled = true;
   document.getElementById('scanBtn').textContent = 'Scanning…';
   document.getElementById('progressWrap').style.display = 'block';
+
   queue = [];
   for (const nicheKey of selectedNiches) {
     const niche = NICHES.find(n => n.key === nicheKey);
-    for (const area of AREAS) queue.push({ niche, area });
+    for (const area of AREAS) {
+      queue.push({ niche, area });
+    }
   }
   queueIdx = 0;
   currentPage = 1;
-  if (!window.google || !window.google.maps) loadGoogleMaps().then(processNext);
-  else processNext();
+
+  if (!window.google || !window.google.maps) {
+    loadGoogleMaps().then(processNext);
+  } else {
+    processNext();
+  }
 }
 
 function loadGoogleMaps() {
@@ -437,12 +594,16 @@ function loadGoogleMaps() {
 }
 
 function processNext() {
-  if (queueIdx >= queue.length) { finishScan(); return; }
+  if (queueIdx >= queue.length) {
+    finishScan();
+    return;
+  }
   const { niche, area } = queue[queueIdx];
   currentPage = 1;
   updateProgress(`Scanning ${niche.label} in ${area} — page 1/3`);
   if (!service) service = new google.maps.places.PlacesService(document.getElementById('map'));
-  service.textSearch({ query: `${niche.query} in ${area}` }, onPageResults);
+  const request = { query: `${niche.query} in ${area}` };
+  service.textSearch(request, onPageResults);
 }
 
 function onPageResults(results, status, pagination) {
@@ -476,10 +637,13 @@ function fetchDetails(list, idx, ctx, done) {
       const rating = details.rating || 0;
       const hasPhone = !!(details.formatted_phone_number || details.international_phone_number);
       const hasWebsite = !!details.website;
+
+      // Filter: no website, has phone, matches rating strategy
       let matchesRating = false;
       if (ratingStrategy === 'both') matchesRating = rating > 0 && (rating <= 3.5 || rating >= 4.5);
       else if (ratingStrategy === 'low') matchesRating = rating > 0 && rating <= 3.5;
       else if (ratingStrategy === 'high') matchesRating = rating >= 4.5;
+
       if (!hasWebsite && hasPhone && matchesRating) {
         allLeads.push({
           place_id: details.place_id,
@@ -516,12 +680,17 @@ function finishScan() {
   toast(`Scan complete! Found ${allLeads.length} total leads.`);
 }
 
+/* ========================================
+   MESSAGE GENERATION (RANDOMIZED)
+   ======================================== */
 function generateMessage(lead) {
   const opener = OPENERS[Math.floor(Math.random() * OPENERS.length)];
   const cta = CTAS[Math.floor(Math.random() * CTAS.length)];
   const isLow = lead.rating <= 3.5;
   const hooks = isLow ? HOOKS_LOW : HOOKS_HIGH;
   const hook = hooks[lead.niche] || 'A simple website could help you stand out online.';
+
+  // Personal detail (rotated based on lead data)
   const details = [
     `Came across ${lead.name} on Google Maps`,
     `Saw your listing for ${lead.name}`,
@@ -529,7 +698,11 @@ function generateMessage(lead) {
     `Noticed ${lead.name} in the area`
   ];
   const detail = details[Math.floor(Math.random() * details.length)];
-  const ratingRef = isLow ? '' : lead.rating >= 4.7 ? `\n\nYour ${lead.rating}⭐ rating with ${lead.reviews} reviews is honestly impressive.` : '';
+
+  const ratingRef = isLow
+    ? ''
+    : lead.rating >= 4.7 ? `\n\nYour ${lead.rating}⭐ rating with ${lead.reviews} reviews is honestly impressive.` : '';
+
   return `${opener} ${detail} — and noticed no website yet.${ratingRef}
 
 ${hook}
@@ -539,6 +712,9 @@ I'm building a small portfolio this month for businesses in ${lead.area}. Free d
 ${cta}`;
 }
 
+/* ========================================
+   TABLE RENDER
+   ======================================== */
 function renderTable() {
   const tbody = document.getElementById('tbody');
   const filtered = allLeads.filter(l => {
@@ -548,13 +724,16 @@ function renderTable() {
     if (ratingFilter === 'high' && l.rating < 4.5) return false;
     return true;
   });
+
   if (filtered.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7" class="empty">No leads match current filters.</td></tr>`;
     return;
   }
+
   const now = Date.now();
   const lockActive = (now - lastSendTime) < SEND_LOCK_MS;
   const lockRemaining = lockActive ? Math.ceil((SEND_LOCK_MS - (now - lastSendTime)) / 1000 / 60) : 0;
+
   tbody.innerHTML = filtered.map(l => {
     const status = leadStatus[l.place_id] || 'not_sent';
     const nicheLabel = (NICHES.find(n => n.key === l.niche) || {}).label || l.niche;
@@ -563,30 +742,36 @@ function renderTable() {
     const canSend = !lockActive && !overLimit;
     const sendBtnClass = canSend ? '' : 'locked';
     const sendBtnLabel = overLimit ? '🛑 Daily limit' : lockActive ? `⏱️ ${lockRemaining}m` : '💬 Send';
-    return `<tr>
-      <td><strong>${l.name}</strong><br><small style="color:#6b7280;">${(l.address||'').substring(0,50)}</small></td>
-      <td><span class="chip chip-niche">${nicheLabel}</span></td>
-      <td><span class="chip chip-area">${l.area}</span></td>
-      <td><span class="rating-tag ${ratingClass}">⭐ ${l.rating.toFixed(1)} · ${l.reviews}</span></td>
-      <td>${l.phone}</td>
-      <td>
-        <select class="status-select" onchange="updateStatus('${l.place_id}', this.value)">
-          <option value="not_sent" ${status==='not_sent'?'selected':''}>Not Sent</option>
-          <option value="sent" ${status==='sent'?'selected':''}>Sent</option>
-          <option value="replied" ${status==='replied'?'selected':''}>Replied</option>
-          <option value="interested" ${status==='interested'?'selected':''}>Interested</option>
-          <option value="not_interested" ${status==='not_interested'?'selected':''}>Not Interested</option>
-          <option value="booked" ${status==='booked'?'selected':''}>Booked ✅</option>
-        </select>
-      </td>
-      <td>
-        <button class="btn-preview" onclick="openModal('${l.place_id}')">👁️ Preview</button>
-        <button class="btn-wa ${sendBtnClass}" onclick="quickSend('${l.place_id}')">${sendBtnLabel}</button>
-      </td>
-    </tr>`;
+
+    return `
+      <tr>
+        <td><strong>${l.name}</strong><br><small style="color:#6b7280;">${(l.address||'').substring(0,50)}</small></td>
+        <td><span class="chip chip-niche">${nicheLabel}</span></td>
+        <td><span class="chip chip-area">${l.area}</span></td>
+        <td><span class="rating-tag ${ratingClass}">⭐ ${l.rating.toFixed(1)} · ${l.reviews}</span></td>
+        <td>${l.phone}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus('${l.place_id}', this.value)">
+            <option value="not_sent" ${status==='not_sent'?'selected':''}>Not Sent</option>
+            <option value="sent" ${status==='sent'?'selected':''}>Sent</option>
+            <option value="replied" ${status==='replied'?'selected':''}>Replied</option>
+            <option value="interested" ${status==='interested'?'selected':''}>Interested</option>
+            <option value="not_interested" ${status==='not_interested'?'selected':''}>Not Interested</option>
+            <option value="booked" ${status==='booked'?'selected':''}>Booked ✅</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn-preview" onclick="openModal('${l.place_id}')">👁️ Preview</button>
+          <button class="btn-wa ${sendBtnClass}" onclick="quickSend('${l.place_id}')">${sendBtnLabel}</button>
+        </td>
+      </tr>
+    `;
   }).join('');
 }
 
+/* ========================================
+   ACTIONS
+   ======================================== */
 function updateStatus(placeId, status) {
   leadStatus[placeId] = status;
   if (status === 'sent') {
@@ -695,11 +880,14 @@ function toast(msg, isError = false) {
   setTimeout(() => t.className = 'toast', 3000);
 }
 
+/* ========================================
+   INIT
+   ======================================== */
 renderNiches();
 renderTable();
 updateStats();
 updateDailyProgress();
-setInterval(renderTable, 30000);
+setInterval(renderTable, 30000); // refresh throttle countdown
 </script>
 </body>
 </html>
